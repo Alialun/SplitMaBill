@@ -1,0 +1,138 @@
+/* General Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background: #1a1a1a; /* Dark gray background */
+    background-size: cover;
+    color: white;
+    text-align: center;
+}
+
+/* Container */
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+}
+
+/* Titles */
+h1, h2, h3 {
+    font-weight: bold;
+}
+
+/* Tabs */
+.tab-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    margin: 5px;
+    transition: 0.3s;
+}
+
+.tab-btn:hover, .tab-btn.active {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+/* Hide inactive tabs */
+.hidden {
+    display: none;
+}
+
+/* Inputs & Buttons */
+.input-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+input, select {
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.btn {
+    padding: 10px 15px;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+/* Editable List */
+.friend-list, .item-list {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+    margin: 20px auto;
+    width: 80%;
+}
+
+.friend-item, .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    backdrop-filter: blur(10px);
+}
+
+.friend-item {
+    max-width: 300px;
+}
+
+.friend-item input, .item input {
+    border: none;
+    background: transparent;
+    color: white;
+    width: 100%;
+}
+
+/* Delete Button */
+.delete-btn {
+    background: rgba(255, 0, 0, 0.6);
+    color: white;
+    padding: 5px 10px;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: 0.3s;
+}
+
+.delete-btn:hover {
+    background: rgba(255, 0, 0, 1);
+}
+
+select {
+    background: #222;  /* Dark background */
+    color: white;       /* White text */
+    border: 1px solid #555;
+}

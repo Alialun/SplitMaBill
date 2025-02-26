@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Split'ma'bill</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Split'ma'bill by Alialun</h1>
+
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="openTab('friends')">Friends 👥</button>
+            <button class="tab-btn" onclick="openTab('split')">Split Bill 💵</button>
+        </div>
+
+        <!-- Friends Management -->
+        <div id="friends" class="tab-content">
+            <h2>Friends List</h2>
+            <div class="input-group">
+                <input type="text" id="friendName" placeholder="Enter Friend's Name">
+                <button class="btn glass-btn" onclick="addFriend()">➕ Add</button>
+            </div>
+            <div id="friendsList" class="friend-list"></div>
+        </div>
+
+        <!-- Bill Splitting -->
+        <div id="split" class="tab-content hidden">
+            <h2>Bill Splitting</h2>
+            <div class="input-group">
+                <select id="friendSelect">
+                    <option value="split">Split Among All</option>
+                </select>
+                <input type="text" id="itemName" placeholder="Item Name">
+                <input type="number" id="itemPrice" placeholder="Price">
+                <button class="btn glass-btn" onclick="addItem()">➕ Add Item</button>
+            </div>
+
+            <div id="itemsList" class="item-list"></div>
+            <button class="btn glass-btn" onclick="calculateSplit()">✅ Complete</button>
+
+            <h3>Final Split</h3>
+            <div id="finalSplit"></div>
+            <div id="qrcode"></div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
