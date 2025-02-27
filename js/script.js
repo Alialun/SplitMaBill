@@ -359,6 +359,82 @@ function setupAutocomplete() {
     });
 }
 
+//Import
+function parseOrderSummary() {
+    let importTextArea = document.getElementById('import-area');
+    if (!importTextArea) {
+        console.error("Textarea not found!");
+        return;
+    }
+
+    let importText = importTextArea.value;
+    if (!importText || typeof importText !== 'string') {
+        console.error("Invalid or empty input text.");
+        return;
+    }
+
+    let lines = importText.split("\n").map(line => line.trim()).filter(line => line !== "");
+    
+    let parsedItems = [];
+    let quantityPattern = /^(\d+)x$/; // Matches "1x", "30x", etc.
+    let pricePattern = /\d+,\d{2} Kč|\d+ Kč/; // Matches "257,00 Kč" or "128 Kč"
+
+    let currentQuantity = 1; // Default quantity is 1
+    let lastItemName = null; // Track last detected item name
+    let ignoreKeywords = ["Mezisoučet", "Celkem", "Způsob platby"];
+
+
+    for (let i = 0; i < lines.length; i++) {
+        let line = lines[i];
+
+        if (ignoreKeywords.some(keyword => line.includes(keyword))) {
+            continue;
+        }
+
+        // Check if the line represents a quantity like "2x"
+        let quantityMatch = line.match(quantityPattern);
+        if (quantityMatch) {
+            currentQuantity = parseInt(quantityMatch[1]); // Store the new quantity
+            continue;
+        }
+
+        // If it's a price line, we assume the previous line(s) were the item name
+        if (pricePattern.test(line)) {
+            let priceMatch = line.match(pricePattern)[0];
+            let price = parseFloat(priceMatch.replace(" Kč", "").replace(",", "."));
+
+            // The item name is usually before the price line. If the previous line was also an item description, take the first occurrence.
+            let itemName = lastItemName ? lastItemName : lines[i - 1];
+            lastItemName = null; // Reset for the next item
+
+            // Divide the price by quantity and add each item separately
+            let individualPrice = price / currentQuantity;
+            for (let j = 0; j < currentQuantity; j++) {
+                parsedItems.push({ friend: "split", name: itemName, price: individualPrice });
+            }
+
+            // Reset quantity after processing the item
+            currentQuantity = 1;
+        } else {
+            // Store last valid item name if it doesn't match a price
+            if (!quantityPattern.test(line)) {
+                if (lastItemName === null) {
+                    lastItemName = line; // Store first part of name if available
+                }
+            }
+        }
+    }
+
+    // Update global items list
+    items = parsedItems;
+    renderItems();
+
+    // Switch to the "Split" tab
+    openTab('split');
+}
+
+
+
 
 
 // Call the setup function when the page loads
