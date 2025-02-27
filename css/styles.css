@@ -136,3 +136,87 @@ select {
     color: white;       /* White text */
     border: 1px solid #555;
 }
+
+/* Autocomplete Suggestions */
+#itemSuggestions {
+    position: absolute;
+    background: #333;
+    color: white;
+    border: 1px solid #555;
+    width: auto;
+    min-width: 150px;
+    max-width: 300px;
+    z-index: 1000;
+    display: none;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#itemSuggestions div {
+    padding: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+    text-align: left;
+}
+
+#itemSuggestions div:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+/* Past Bills */
+.bill-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    backdrop-filter: blur(10px);
+}
+
+.bill-item ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.bill-item li {
+    margin: -5px 0;
+}
+
+.edit-btn {
+    background: rgba(0, 128, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: 0.3s;
+}
+
+.pay-btn {
+    background: rgba(0, 128, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: 0.3s;
+}
+.pay-btn:hover {
+    background: rgba(0, 128, 0, 1);
+}
+
+.unpay-btn {
+    background: rgba(255, 0, 0, 0.6);
+    color: white;
+    padding: 5px 10px;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: 0.3s;
+}
+.unpay-btn:hover {
+    background: rgba(255, 0, 0, 1);
+}
+
+.edit-btn:hover {
+    background: rgba(0, 128, 0, 1);
+}
