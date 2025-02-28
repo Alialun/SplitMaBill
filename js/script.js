@@ -88,40 +88,61 @@ function loadFriends() {
 
 
 function toggleDropdown(id, event) {
-    if (event) event.stopPropagation(); // Prevent bubbling up
+    if (event) event.stopPropagation(); // Prevent event bubbling
 
     let dropdown = document.querySelector(`#${id} .dropdown-options`);
+    let parentItem = document.querySelector(`#${id}`).closest(".item"); // Get the item's container
+
     if (!dropdown) {
         console.error("Dropdown not found for ID:", id);
         return;
     }
 
-    // Close other dropdowns before opening the clicked one
+    // Close other dropdowns and reset z-index of all items
     document.querySelectorAll(".dropdown-options").forEach(d => {
         if (d !== dropdown) {
             d.classList.add("hidden");
             d.style.display = "none";
+            let item = d.closest(".item");
+            if (item) item.style.zIndex = "1"; // Reset other items
         }
     });
 
     if (dropdown.classList.contains("hidden")) {
         dropdown.classList.remove("hidden");
-        dropdown.style.display = "block";  // Force show
+        dropdown.style.display = "block";  // Show dropdown
 
-        // Adjust dropdown position if it overflows the screen
+        // Increase z-index of the item's container to bring it to the front
+        if (parentItem) {
+            parentItem.style.zIndex = "1000";
+        }
+
+        // Ensure dropdown is above other elements
+        dropdown.style.zIndex = "1100";
+
+        // Check if there is enough space below
         let rect = dropdown.getBoundingClientRect();
-        if (rect.bottom > window.innerHeight) {
+        let availableSpaceBelow = window.innerHeight - rect.bottom;
+        let availableSpaceAbove = rect.top;
+
+        if (availableSpaceBelow < 100 && availableSpaceAbove > availableSpaceBelow) {
             dropdown.style.top = "auto";
-            dropdown.style.bottom = "100%"; // Move dropdown above if it's too low
+            dropdown.style.bottom = "100%"; // Move dropdown above
         } else {
-            dropdown.style.top = "100%"; // Default to below the select
-            dropdown.style.bottom = "auto";
+            dropdown.style.top = "100%";
+            dropdown.style.bottom = "auto"; // Default position
         }
     } else {
         dropdown.classList.add("hidden");
-        dropdown.style.display = "none";  // Force hide
+        dropdown.style.display = "none";
+
+        // Reset z-index when dropdown is closed
+        if (parentItem) {
+            parentItem.style.zIndex = "1";
+        }
     }
 }
+
 
 
 
@@ -555,7 +576,7 @@ function parseFoodoraOrder() {
             // Divide the price by quantity and add each item separately
             let individualPrice = price / currentQuantity;
             for (let j = 0; j < currentQuantity; j++) {
-                parsedItems.push({ friend: "split", name: itemName, price: individualPrice });
+                parsedItems.push({ friends: [], name: itemName, price: individualPrice });
             }
 
             // Reset quantity after processing the item

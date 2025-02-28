@@ -225,27 +225,32 @@ select {
     background: rgba(0, 128, 0, 1);
 }
 
+/* Default item styles */
+.item {
+    position: relative;
+    z-index: 1; /* Default z-index for all items */
+    overflow: visible; /* Prevents clipping */
+}
+
+/* Dropdown inside item */
 .custom-multiselect {
     position: relative;
     display: inline-block;
     background: #222;
     color: white;
-    align-content: center;
+    margin: 5px;
     padding: 10px;
     border-radius: 5px;
     cursor: pointer;
     min-width: 150px;
     text-align: left;
-    z-index: 10; /* Ensure it's above other elements */
+    z-index: 10;
 }
 
-.custom-multiselect .selected-options {
-    display: block;
-}
-
+/* Ensure dropdown is on top */
 .custom-multiselect .dropdown-options {
     position: absolute;
-    top: 100%; /* Position dropdown below the select */
+    top: 100%;
     left: 0;
     background: #333;
     color: white;
@@ -253,9 +258,14 @@ select {
     width: 100%;
     max-height: 200px;
     overflow-y: auto;
-    z-index: 1000; /* Ensure it appears above other elements */
+    z-index: 1100; /* Ensure dropdown is above everything */
     display: none;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); /* Slight shadow for visibility */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Ensure selected item appears on top */
+.item[style*="z-index: 1000"] {
+    z-index: 1000 !important;
 }
 
 .custom-multiselect .dropdown-options div {
@@ -275,4 +285,8 @@ select {
 /* Hide dropdowns by default */
 .hidden {
     display: none !important;
+}
+
+.custom-multiselect .selected-options {
+    display: block;
 }
