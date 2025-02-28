@@ -67,7 +67,7 @@ input, select, textarea {
     color: white;
 }
 
-#import {
+textarea {
     width: 100%;
 }
 

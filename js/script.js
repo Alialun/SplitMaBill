@@ -54,10 +54,15 @@ function deleteFriend(index) {
 ////Splitting tab
 function loadFriends() {
     let select = document.getElementById('friendSelect');
-    select.innerHTML = `<option value="split">Split Among All</option>`;
-    friends.forEach(friend => {
-        select.innerHTML += `<option value="${friend}">${friend}</option>`;
-    });
+    let inlineSelects = document.querySelectorAll("#inlineFriendSelect")
+    let inlineSelectsArray = Array.from(inlineSelects); 
+    inlineSelectsArray.push(select);
+    inlineSelectsArray.forEach(sel => {
+        sel.innerHTML = `<option value="split">Split Among All</option>`;
+        friends.forEach(friend => {
+            sel.innerHTML += `<option value="${friend}">${friend}</option>`;
+        });
+    })
 }
 
 function addItem() {
@@ -83,7 +88,7 @@ function renderItems() {
     items.forEach((item, index) => {
         list.innerHTML += `
             <div class="item">
-                <select onchange="updateItem(${index}, 'friend', this.value)">
+                <select id="inlineFriendSelect" onchange="updateItem(${index}, 'friend', this.value)">
                     <option value="split" ${item.friend === "split" ? "selected" : ""}>Split Among All</option>
                     ${friends.map(friend => `<option value="${friend}" ${item.friend === friend ? "selected" : ""}>${friend}</option>`).join('')}
                 </select>
@@ -360,7 +365,7 @@ function setupAutocomplete() {
 }
 
 //Import
-function parseOrderSummary() {
+function parseFoodoraOrder() {
     let importTextArea = document.getElementById('import-area');
     if (!importTextArea) {
         console.error("Textarea not found!");
@@ -387,14 +392,11 @@ function parseOrderSummary() {
     for (let i = 0; i < lines.length; i++) {
         let line = lines[i];
 
-        if (ignoreKeywords.some(keyword => line.includes(keyword))) {
-            continue;
-        }
-
         // Check if the line represents a quantity like "2x"
         let quantityMatch = line.match(quantityPattern);
         if (quantityMatch) {
             currentQuantity = parseInt(quantityMatch[1]); // Store the new quantity
+            lastItemName = null;
             continue;
         }
 
@@ -406,6 +408,13 @@ function parseOrderSummary() {
             // The item name is usually before the price line. If the previous line was also an item description, take the first occurrence.
             let itemName = lastItemName ? lastItemName : lines[i - 1];
             lastItemName = null; // Reset for the next item
+
+            
+
+            if (ignoreKeywords.some(keyword => itemName.includes(keyword))) {
+                lastItemName = null;
+                continue;
+            }
 
             // Divide the price by quantity and add each item separately
             let individualPrice = price / currentQuantity;
