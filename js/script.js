@@ -8,12 +8,14 @@ function openTab(tabName) {
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.querySelector(`[onclick="openTab('${tabName}')"]`).classList.add('active');
 
+    // **Fix: Only reload friends when a friend is added/removed**
     if (tabName === 'split') {
         loadFriends();
     } else if (tabName === 'bills') {
         renderPastBills();
     }
 }
+
 
 
 ////Friends tab
@@ -55,13 +57,23 @@ function deleteFriend(index) {
 function loadFriends() {
     let selects = document.querySelectorAll(".custom-multiselect");
 
-    selects.forEach(select => {
+    selects.forEach((select, index) => {
         let dropdown = select.querySelector(".dropdown-options");
         let selectedSpan = select.querySelector(".selected-options");
 
         if (!dropdown) {
             console.error("Dropdown not found inside:", select);
             return;
+        }
+
+        let selectedFriends = [];
+        let hasSelection = false;
+
+        // **Get selected friends from the `items` array if it exists**
+        if(index != 0) {
+            index -=1;
+            selectedFriends = items[index] ? items[index].friends : [];
+            hasSelection = selectedFriends.length > 0;
         }
 
         dropdown.innerHTML = ""; // Clear previous options
@@ -72,19 +84,28 @@ function loadFriends() {
             option.dataset.value = friend;
             option.classList.add("dropdown-item");
 
-            // Ensure clicking doesn’t close dropdown
+            // Mark as selected if in the item's friends list
+            if (selectedFriends.includes(friend)) {
+                option.classList.add("selected");
+            }
+
+            // Toggle selection on click
             option.onclick = function (event) {
-                event.stopPropagation(); // Prevent closing
+                event.stopPropagation();
                 option.classList.toggle("selected");
-                updateSelectedFriends(select);
+                updateSelectedFriends(select, index);
             };
 
             dropdown.appendChild(option);
         });
 
-        selectedSpan.textContent = "Split Among All"; // Reset placeholder
+        // **Fix: Read selection from `items` instead of resetting**
+        selectedSpan.textContent = hasSelection
+            ? (selectedFriends.length > 3 ? selectedFriends.length + " Friends" : selectedFriends.join(", "))
+            : "Split Among All";
     });
 }
+
 
 
 function toggleDropdown(id, event) {
@@ -216,7 +237,7 @@ function addItem() {
     if (name && price) {
         // If no one is selected, store as "split" instead of listing all friends
         if (selectedFriends.length === 0) {
-            selectedFriends = ["split"];
+            selectedFriends = ["Split Among All"];
         }
 
         items.push({ friends: selectedFriends, name, price });
@@ -264,11 +285,12 @@ function calculateSplit() {
 
     // Step 1: Identify friends who have at least one item
     items.forEach(item => {
-        if (item.friends.includes("split")) {
+        if (item.friends.includes("Split Among All")) {
             item.friends = []; // Reset to allow dynamic splitting
         }
         item.friends.forEach(friend => activeFriends.add(friend));
     });
+    
 
     // Step 2: Initialize balances only for active friends
     activeFriends.forEach(friend => splitAmounts[friend] = 0);
@@ -282,6 +304,8 @@ function calculateSplit() {
             splitAmounts[friend] += share;
         });
     });
+
+    appendToPastBillsLocalStorage(items, splitAmounts);
 
     // Step 4: Display results only for active friends
     let resultHTML = Object.entries(splitAmounts)
