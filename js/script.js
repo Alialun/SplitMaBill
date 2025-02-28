@@ -107,11 +107,22 @@ function toggleDropdown(id, event) {
     if (dropdown.classList.contains("hidden")) {
         dropdown.classList.remove("hidden");
         dropdown.style.display = "block";  // Force show
+
+        // Adjust dropdown position if it overflows the screen
+        let rect = dropdown.getBoundingClientRect();
+        if (rect.bottom > window.innerHeight) {
+            dropdown.style.top = "auto";
+            dropdown.style.bottom = "100%"; // Move dropdown above if it's too low
+        } else {
+            dropdown.style.top = "100%"; // Default to below the select
+            dropdown.style.bottom = "auto";
+        }
     } else {
         dropdown.classList.add("hidden");
         dropdown.style.display = "none";  // Force hide
     }
 }
+
 
 
 document.addEventListener("click", function(event) {

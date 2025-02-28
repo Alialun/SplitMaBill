@@ -230,6 +230,7 @@ select {
     display: inline-block;
     background: #222;
     color: white;
+    align-content: center;
     padding: 10px;
     border-radius: 5px;
     cursor: pointer;
