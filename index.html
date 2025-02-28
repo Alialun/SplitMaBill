@@ -32,9 +32,10 @@
         <div id="split" class="tab-content hidden">
             <h2>Bill Splitting</h2>
             <div class="input-group">
-                <select id="friendSelect">
-                    <option value="split">Split Among All</option>
-                </select>
+                <div class="custom-multiselect" id="friendSelect" onclick="toggleDropdown('friendSelect')">
+                    <span class="selected-options">Split Among All</span>
+                    <div class="dropdown-options hidden"></div>
+                </div>                              
                 <input type="text" id="itemName" placeholder="Item Name">
                 <input type="number" id="itemPrice" placeholder="Price">
                 <button class="btn glass-btn" onclick="addItem()">➕ Add Item</button>

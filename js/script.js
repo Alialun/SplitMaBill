@@ -53,27 +53,90 @@ function deleteFriend(index) {
 
 ////Splitting tab
 function loadFriends() {
-    let select = document.getElementById('friendSelect');
-    let inlineSelects = document.querySelectorAll("#inlineFriendSelect")
-    let inlineSelectsArray = Array.from(inlineSelects); 
-    inlineSelectsArray.push(select);
-    inlineSelectsArray.forEach(sel => {
-        sel.innerHTML = `<option value="split">Split Among All</option>`;
+    let selects = document.querySelectorAll(".custom-multiselect");
+
+    selects.forEach(select => {
+        let dropdown = select.querySelector(".dropdown-options");
+        let selectedSpan = select.querySelector(".selected-options");
+
+        if (!dropdown) {
+            console.error("Dropdown not found inside:", select);
+            return;
+        }
+
+        dropdown.innerHTML = ""; // Clear previous options
+
         friends.forEach(friend => {
-            sel.innerHTML += `<option value="${friend}">${friend}</option>`;
+            let option = document.createElement("div");
+            option.textContent = friend;
+            option.dataset.value = friend;
+            option.classList.add("dropdown-item");
+
+            // Ensure clicking doesn’t close dropdown
+            option.onclick = function (event) {
+                event.stopPropagation(); // Prevent closing
+                option.classList.toggle("selected");
+                updateSelectedFriends(select);
+            };
+
+            dropdown.appendChild(option);
         });
-    })
+
+        selectedSpan.textContent = "Split Among All"; // Reset placeholder
+    });
 }
 
-function addItem() {
-    const friend = document.getElementById('friendSelect').value;
-    const name = document.getElementById('itemName').value.trim();
-    const price = parseFloat(document.getElementById('itemPrice').value);
 
-    if (name && price) {
-        items.push({ friend, name, price });
-        renderItems();
+function toggleDropdown(id, event) {
+    if (event) event.stopPropagation(); // Prevent bubbling up
+
+    let dropdown = document.querySelector(`#${id} .dropdown-options`);
+    if (!dropdown) {
+        console.error("Dropdown not found for ID:", id);
+        return;
     }
+
+    // Close other dropdowns before opening the clicked one
+    document.querySelectorAll(".dropdown-options").forEach(d => {
+        if (d !== dropdown) {
+            d.classList.add("hidden");
+            d.style.display = "none";
+        }
+    });
+
+    if (dropdown.classList.contains("hidden")) {
+        dropdown.classList.remove("hidden");
+        dropdown.style.display = "block";  // Force show
+    } else {
+        dropdown.classList.add("hidden");
+        dropdown.style.display = "none";  // Force hide
+    }
+}
+
+
+document.addEventListener("click", function(event) {
+    document.querySelectorAll(".custom-multiselect .dropdown-options").forEach(dropdown => {
+        let parent = dropdown.closest(".custom-multiselect");
+
+        if (!parent.contains(event.target)) {
+            dropdown.classList.add("hidden");
+            dropdown.style.display = "none";
+        } else {
+        }
+    });
+});
+
+
+function updateSelectedFriends(select) {
+    let selectedOptions = select.querySelectorAll(".dropdown-options .selected");
+    let selectedValues = Array.from(selectedOptions).map(option => option.dataset.value);
+
+    // Update the UI display text
+    let selectedSpan = select.querySelector(".selected-options");
+    selectedSpan.textContent = selectedValues.length ? (selectedValues.length > 3 ? selectedValues.length + " Friends" : selectedValues.join(", ")) : "Split Among All";
+
+    // Store the selected values in the element's dataset
+    select.dataset.selectedValues = JSON.stringify(selectedValues);
 }
 
 function resetSplit() {
@@ -85,13 +148,23 @@ function resetSplit() {
 function renderItems() {
     const list = document.getElementById('itemsList');
     list.innerHTML = "";
+
     items.forEach((item, index) => {
+        let selectText = item.friends.length ? (item.friends.length > 3 ? item.friends.length + " Friends" : item.friends.join(", ")) : "Split Among All";
         list.innerHTML += `
             <div class="item">
-                <select id="inlineFriendSelect" onchange="updateItem(${index}, 'friend', this.value)">
-                    <option value="split" ${item.friend === "split" ? "selected" : ""}>Split Among All</option>
-                    ${friends.map(friend => `<option value="${friend}" ${item.friend === friend ? "selected" : ""}>${friend}</option>`).join('')}
-                </select>
+                <div class="custom-multiselect inline-friend-select" id="inlineFriendSelect-${index}" onclick="toggleDropdown('inlineFriendSelect-${index}')">
+                    <span class="selected-options">${selectText}</span>
+                    <div class="dropdown-options hidden">
+                        ${friends.map(friend => `
+                            <div class="dropdown-item ${item.friends.includes(friend) ? "selected" : ""}" 
+                                 data-value="${friend}" 
+                                 onclick="toggleInlineFriend(${index}, this)">
+                                ${friend}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
                 <input type="text" value="${item.name}" onchange="updateItem(${index}, 'name', this.value)">
                 <input type="number" value="${item.price}" onchange="updateItem(${index}, 'price', this.value)">
                 <button class="delete-btn" onclick="deleteItem(${index})">🗑</button>
@@ -100,10 +173,53 @@ function renderItems() {
     });
 }
 
-function updateItem(index, field, value) {
-    items[index][field] = field === 'price' ? parseFloat(value) : value;
-    renderItems(); // Refresh to apply changes
+
+function addItem() {
+    let select = document.getElementById('friendSelect');
+    let selectedFriends = JSON.parse(select.dataset.selectedValues || "[]");
+
+    const name = document.getElementById('itemName').value.trim();
+    const price = parseFloat(document.getElementById('itemPrice').value);
+
+    if (name && price) {
+        // If no one is selected, store as "split" instead of listing all friends
+        if (selectedFriends.length === 0) {
+            selectedFriends = ["split"];
+        }
+
+        items.push({ friends: selectedFriends, name, price });
+        renderItems();
+    }
 }
+
+
+function toggleInlineFriend(index, element) {
+    event.stopPropagation(); // Prevent click from closing dropdown
+
+    element.classList.toggle("selected");
+
+    let select = document.getElementById(`inlineFriendSelect-${index}`);
+    let selectedOptions = select.querySelectorAll(".dropdown-options .selected");
+    let selectedValues = Array.from(selectedOptions).map(option => option.dataset.value);
+
+    select.querySelector(".selected-options").textContent = selectedValues.length ? (selectedValues.length > 3 ? selectedValues.length + " Friends" : selectedValues.join(", ")) : "Split Among All";
+
+    // Update the item array
+    items[index].friends = selectedValues;
+}
+
+
+function updateItem(index, field, value) {
+    if (field === 'friends') {
+        items[index].friends = Array.from(value.selectedOptions).map(option => option.value);
+    } else if (field === 'price') {
+        items[index][field] = parseFloat(value);
+    } else {
+        items[index][field] = value;
+    }
+    renderItems();
+}
+
 
 function deleteItem(index) {
     items.splice(index, 1); // Remove the item from the list
@@ -111,35 +227,38 @@ function deleteItem(index) {
 }
 
 function calculateSplit() {
-    let splitAmounts = {}; // Track how much each person owes
-    let activeFriends = new Set(items.map(item => item.friend).filter(friend => friend !== "split"));
+    let splitAmounts = {};
+    let activeFriends = new Set();
 
-    // Initialize balances
-    activeFriends.forEach(friend => splitAmounts[friend] = 0);
-
-    // Calculate amounts owed per person
+    // Step 1: Identify friends who have at least one item
     items.forEach(item => {
-        if (item.friend === "split") {
-            let splitCount = activeFriends.size;
-            if (splitCount > 0) {
-                let splitCost = item.price / splitCount;
-                activeFriends.forEach(friend => splitAmounts[friend] += splitCost);
-            }
-        } else {
-            splitAmounts[item.friend] += item.price;
+        if (item.friends.includes("split")) {
+            item.friends = []; // Reset to allow dynamic splitting
         }
+        item.friends.forEach(friend => activeFriends.add(friend));
     });
 
-    // Save bill details with total per person and item breakdown
-    appendToPastBillsLocalStorage(items, splitAmounts);
+    // Step 2: Initialize balances only for active friends
+    activeFriends.forEach(friend => splitAmounts[friend] = 0);
 
-    // Display results
-    let resultHTML = "";
-    for (let [friend, amount] of Object.entries(splitAmounts)) {
-        resultHTML += `<p>${friend}: ${amount.toFixed(2)} Kč</p>`;
-    }
+    // Step 3: Distribute item costs
+    items.forEach(item => {
+        let splitBetween = item.friends.length > 0 ? item.friends : Array.from(activeFriends);
+        let share = item.price / splitBetween.length;
+
+        splitBetween.forEach(friend => {
+            splitAmounts[friend] += share;
+        });
+    });
+
+    // Step 4: Display results only for active friends
+    let resultHTML = Object.entries(splitAmounts)
+        .map(([friend, amount]) => `<p>${friend}: ${amount.toFixed(2)} Kč</p>`)
+        .join('');
+
     document.getElementById('finalSplit').innerHTML = resultHTML;
 }
+
 
 
 function appendToPastBillsLocalStorage(items, splitAmounts) {
@@ -387,6 +506,7 @@ function parseFoodoraOrder() {
     let currentQuantity = 1; // Default quantity is 1
     let lastItemName = null; // Track last detected item name
     let ignoreKeywords = ["Mezisoučet", "Celkem", "Způsob platby"];
+    let invertKeywords = ["Sleva"];
 
 
     for (let i = 0; i < lines.length; i++) {
@@ -414,6 +534,11 @@ function parseFoodoraOrder() {
             if (ignoreKeywords.some(keyword => itemName.includes(keyword))) {
                 lastItemName = null;
                 continue;
+            }
+
+            
+            if (invertKeywords.some(keyword => itemName.includes(keyword))) {
+                price = -price;
             }
 
             // Divide the price by quantity and add each item separately
