@@ -282,6 +282,7 @@ function deleteItem(index) {
 function calculateSplit() {
     let splitAmounts = {};
     let activeFriends = new Set();
+    console.log(items);
 
     // Step 1: Identify friends who have at least one item
     items.forEach(item => {
@@ -613,14 +614,21 @@ function parseFoodoraOrder() {
                 }
             }
         }
+        
     }
 
     // Update global items list
     items = parsedItems;
-    renderItems();
-
+    setTimeout(() => {
+        console.log("This message appears after 1 second");
+    }, 1000);
+    
     // Switch to the "Split" tab
     openTab('split');
+    setTimeout(() => {
+        console.log("This message appears after 1 second");
+    }, 1000);
+    renderItems();
 }
 
 
