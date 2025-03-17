@@ -75,16 +75,18 @@
         <!-- Settings -->
         <div id="settings" class="tab-content hidden">
             <h2>Settings</h2>
+            <h3>QR codes</h3>
+            <span>Make sure there's enough empty space around QR codes for them to be readable by devices.</span>
             <table>
                 <tr>
                     <td>
-                        <h3>Revolut</h3>
+                        <h4>Revolut</h4>
                         <input type="file" id="imageInputRevolut" accept="image/*"><br>
                         <canvas id="canvasRevolut" width="200" height="200" style="border:1px solid black;"></canvas><br>
                         <button onclick="processImage('Revolut')">Update and save</button>
                     </td>
                     <td>
-                        <h3>Other</h3>
+                        <h4>Other</h4>
                         <input type="file" id="imageInputOther" accept="image/*"><br>
                         <canvas id="canvasOther" width="200" height="200" style="border:1px solid black;"></canvas><br>
                         <button onclick="processImage('Other')">Update and save</button>

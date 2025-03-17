@@ -363,6 +363,25 @@ async function drawSplitCanvas(splitAmounts, splitItems) {
     // Draw background
     ctx.fillStyle = "#1a1a1a";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    //Draw background gradient
+    // Define the gradient at an angle (45°)
+    let gradient = ctx.createLinearGradient(canvas.width/2-50, canvas.height, canvas.width/2+50, 0);
+
+    // Add color stops to create a mirrored effect
+    //gradient.addColorStop(0, "#202020"); // Middle transition to blue
+    gradient.addColorStop(0, "#333333"); // Middle transition to blue
+    gradient.addColorStop(0.5, "#1a1a1a");   // Start with red
+    gradient.addColorStop(0.7, "#1a1a1a");   // Start with red
+    gradient.addColorStop(1, "#232323"); // Middle transition to blue
+    //gradient.addColorStop(0.9, "#1a1a1a");   // End back to red
+
+    // Apply gradient
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.lineWidth = 2; // Set thickness of the outline
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.6)"; // White color with 50% transparency
+    ctx.strokeRect(5, 5, canvas.width-10, canvas.height-10); // (x, y, width, height)
 
     // Set text styles
     ctx.font = "16px Arial";
@@ -401,7 +420,15 @@ async function drawSplitCanvas(splitAmounts, splitItems) {
     if(anyQR)
     {
         let canvasRevolut = document.getElementById("canvasRevolut");
+        let ctxRevolut = canvasRevolut.getContext("2d");
         let canvasOther = document.getElementById("canvasOther");
+        let ctxOther = canvasOther.getContext("2d");
+        /*ctxRevolut.lineWidth = 2; // Set thickness of the outline
+        ctxRevolut.strokeStyle = "rgba(255, 255, 255, 0.6)"; // White color with 50% transparency
+        ctxRevolut.strokeRect(1, 1, canvasRevolut.width-2, canvasRevolut.height-2); // (x, y, width, height)
+        ctxOther.lineWidth = 2; // Set thickness of the outline
+        ctxOther.strokeStyle = "rgba(255, 255, 255, 0.6)"; // White color with 50% transparency
+        ctxOther.strokeRect(1, 1, canvasOther.width-2, canvasOther.height-2); // (x, y, width, height)*/
         ctx.font = "bold 16px Arial";
         ctx.textAlign = "center";
         ctx.fillText("Revolut", x+100, y+10);
@@ -416,7 +443,7 @@ async function drawSplitCanvas(splitAmounts, splitItems) {
     //watermark 
     let watermarkImg = await loadImage("https://alialun.github.io/SplitMaBill/watermark.png");
     ctx.globalAlpha = 0.3; // Set transparency
-    ctx.drawImage(watermarkImg, canvas.width - watermarkImg.width - 10, 10);
+    ctx.drawImage(watermarkImg, canvas.width - watermarkImg.width - 15, 10);
     ctx.globalAlpha = 1.0; // Reset transparency
 
     let imgElement = document.getElementById("splitImg");
@@ -898,6 +925,10 @@ async function processImage(id) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(tempCanvas, startX, startY, 200, 200, 0, 0, 200, 200);
 
+    ctx.lineWidth = 2; // Set thickness of the outline
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.6)"; // White color with 50% transparency
+    ctx.strokeRect(1, 1, canvas.width-2, canvas.height-2); // (x, y, width, height)
+
     saveCanvasToLocalStorage("canvas" + id);
     anyQR = true;
 }
@@ -905,6 +936,7 @@ async function processImage(id) {
 function loadImage(src) {
     return new Promise((resolve, reject) => {
         let img = new Image();
+        img.crossOrigin = "anonymous"; // Allows cross-origin image loading
         img.src = src;
         img.onload = () => resolve(img);
         img.onerror = reject;
