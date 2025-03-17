@@ -11,6 +11,7 @@ function openTab(tabName) {
     // **Fix: Only reload friends when a friend is added/removed**
     if (tabName === 'split') {
         loadFriends();
+        renderItems();
     } else if (tabName === 'bills') {
         renderPastBills();
     }
