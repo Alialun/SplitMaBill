@@ -290,3 +290,13 @@ select {
 .custom-multiselect .selected-options {
     display: block;
 }
+
+table {
+    margin: auto;
+    display: table;
+}
+
+img {
+    display: block;
+    margin: auto;
+}

@@ -1,5 +1,6 @@
 let friends = JSON.parse(localStorage.getItem('friends')) || [];
 let items = [];
+let anyQR = false;
 
 function openTab(tabName) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
@@ -282,7 +283,8 @@ function deleteItem(index) {
 
 function calculateSplit() {
     let splitAmounts = {};
-    let activeFriends = new Set();
+    let splitItems = {};
+    let activeFriends = [];
     console.log(items);
 
     // Step 1: Identify friends who have at least one item
@@ -290,7 +292,7 @@ function calculateSplit() {
         if (item.friends.includes("Split Among All")) {
             item.friends = []; // Reset to allow dynamic splitting
         }
-        item.friends.forEach(friend => activeFriends.add(friend));
+        item.friends.forEach(friend =>{ if(!activeFriends.includes(friend)) activeFriends.push(friend) });
     });
     
 
@@ -302,22 +304,117 @@ function calculateSplit() {
         let splitBetween = item.friends.length > 0 ? item.friends : Array.from(activeFriends);
         let share = item.price / splitBetween.length;
 
+        let edittedItem = { name: item.name, price: share};
+        edittedItem.price = share;
+
         splitBetween.forEach(friend => {
             splitAmounts[friend] += share;
+            if (!splitItems[friend]) {
+                splitItems[friend] = [];
+            }
+            splitItems[friend].push(edittedItem);
         });
     });
+
+    console.log(splitItems);
+    console.log(splitAmounts);
+
+    for (let friend in splitAmounts) {
+        splitAmounts[friend] = Math.round(splitAmounts[friend]);
+    }
+
+    drawSplitCanvas(splitAmounts, splitItems);
 
     appendToPastBillsLocalStorage(items, splitAmounts);
 
     // Step 4: Display results only for active friends
-    let resultHTML = Object.entries(splitAmounts)
-        .map(([friend, amount]) => `<p>${friend}: ${amount.toFixed(2)} Kč</p>`)
+    /*let resultHTML = Object.entries(splitAmounts)
+        .map(([friend, amount]) => `<p>${friend}: ${amount.toFixed(0)} Kč</p>`)
         .join('');
 
-    document.getElementById('finalSplit').innerHTML = resultHTML;
+    document.getElementById('finalSplit').innerHTML = resultHTML;*/
 }
 
+function drawSplitCanvas(splitAmounts, splitItems) {
+    //let canvas = document.getElementById("splitCanvas");
+    canvas = document.createElement("canvas");
+    let ctx = canvas.getContext("2d");
 
+    let baseHeight = 90;  // Start with some height for title
+    let nameLineHeight = 20;  // Space per line
+    let itemLineHeight = 16;  // Space per line
+    let spacingHeight = 10;  // Space per line
+    let requiredHeight = baseHeight;
+
+    // Calculate needed height
+    for (let person in splitItems) {
+        requiredHeight += nameLineHeight; // Person's name
+        requiredHeight += splitItems[person].length * itemLineHeight; // Number of items they have
+        requiredHeight += spacingHeight; // Extra space after each person
+    }
+    if(anyQR)
+    {
+        requiredHeight += 200 + nameLineHeight;
+    }
+
+    canvas.width = 500; // Set width
+    canvas.height = requiredHeight; // Set new height
+
+    // Draw background
+    ctx.fillStyle = "#1a1a1a";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Set text styles
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "white"; 
+
+    let x = 20;
+    let y = 40;
+
+    // Draw title
+    ctx.font = "20px Arial";
+    ctx.fillText("Souhrn - "+new Date().toLocaleDateString(), x, y);
+    y += 30;
+
+    // Reset font for details
+
+    // Draw each person's items
+    for (let person in splitItems) {
+        ctx.font = "bold 16px Arial";
+        ctx.fillText(person + " - " + splitAmounts[person].toFixed(0) + " Kč", x, y);
+        y += nameLineHeight;
+        ctx.font = "12px Arial";
+
+        splitItems[person].forEach(item => {
+            ctx.fillText("- " + item.name.slice(0,55) + ": " + item.price.toFixed(2)+" Kč", x + 20, y);
+            y += itemLineHeight;
+        });
+
+        y += spacingHeight; // Extra space between people
+    }
+
+    // Draw qr codes
+    if(anyQR)
+    {
+        let canvasRevolut = document.getElementById("canvasRevolut");
+        let canvasOther = document.getElementById("canvasOther");
+        ctx.font = "bold 16px Arial";
+        ctx.fillText("Revolut", x+70, y+5);
+        ctx.fillText("Banka", x+335, y+5);
+        y += nameLineHeight;
+        ctx.drawImage(canvasRevolut, x, y);
+        ctx.drawImage(canvasOther, x+260, y);
+    }
+
+    let imgElement = document.getElementById("splitImg");
+
+    // Convert canvas to image URL
+    let dataURL = canvas.toDataURL("image/png");
+
+    // Set as image source
+    imgElement.src = dataURL;
+    imgElement.style.display = "block"; // Show image
+}
 
 function appendToPastBillsLocalStorage(items, splitAmounts) {
     let savedBills = JSON.parse(localStorage.getItem('bills')) || [];
@@ -377,7 +474,7 @@ function renderPastBills() {
                     ${Object.entries(bill.totalPerPerson).map(([friend, amount]) => {
                         return `
                             <li style="${bill.paidStatus[friend] ? 'text-decoration: line-through; color: gray;' : ''}">
-                                ${friend}: ${amount.toFixed(2)} Kč 
+                                ${friend}: ${amount.toFixed(0)} Kč 
                                 ${bill.paidStatus[friend] 
                                     ? `<button class="btn unpay-btn" onclick="markPersonUnpaid(${billIndex}, '${friend}')">❌</button>` 
                                     : `<button class="btn pay-btn" onclick="markPersonPaid(${billIndex}, '${friend}')">💸</button>`}
@@ -712,9 +809,89 @@ function parseFoodoraOrderMarek() {
     renderItems();
 }
 
+function saveCanvasToLocalStorage(canvasId) {
+    let canvas = document.getElementById(canvasId);
+    let dataURL = canvas.toDataURL("image/png"); // Convert to Base64 PNG
+    localStorage.setItem(canvasId, dataURL); // Store in localStorage
+}
+
+function loadCanvasFromLocalStorage(canvasId) {
+    let canvas = document.getElementById(canvasId);
+    let ctx = canvas.getContext("2d");
+    let dataURL = localStorage.getItem(canvasId);
+
+    if (dataURL) {
+        let img = new Image();
+        img.src = dataURL;
+        img.onload = function () {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+        };
+        anyQR = true;
+    }
+}
+
+function loadCanvases() {
+    loadCanvasFromLocalStorage("canvasRevolut");
+    loadCanvasFromLocalStorage("canvasOther");
+}
+
+
+async function processImage(id) {
+    let fileInput = document.getElementById("imageInput" + id);
+    let file = fileInput.files[0];
+
+    if (!file) return; // If no file, do nothing
+
+    let img = new Image();
+    let reader = new FileReader();
+
+    // Wrap image loading inside a Promise
+    let imageLoaded = new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+    });
+
+    reader.onload = function(e) {
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+
+    // Wait for the image to load before processing
+    await imageLoaded;
+
+    let canvas = document.getElementById("canvas" + id);
+    let ctx = canvas.getContext("2d");
+
+    let { width, height } = img;
+    let scale = 200 / Math.min(width, height); // Scale so the larger dimension is 200px
+    let newWidth = Math.round(width * scale);
+    let newHeight = Math.round(height * scale);
+
+    // Ensure tempCanvas is properly created and sized
+    let tempCanvas = document.createElement("canvas");
+    tempCanvas.width = newWidth;
+    tempCanvas.height = newHeight;
+    let tempCtx = tempCanvas.getContext("2d");
+
+    // Draw resized image
+    tempCtx.drawImage(img, 0, 0, newWidth, newHeight);
+
+    // Crop the center to make a 200x200 square
+    let startX = Math.max(0, (newWidth - 200) / 2);
+    let startY = Math.max(0, (newHeight - 200) / 2);
+
+    // Draw cropped image onto the main canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(tempCanvas, startX, startY, 200, 200, 0, 0, 200, 200);
+
+    saveCanvasToLocalStorage("canvas" + id);
+    anyQR = true;
+}
 
 
 
 // Call the setup function when the page loads
 setupAutocomplete();
 renderFriends();
+loadCanvases();
