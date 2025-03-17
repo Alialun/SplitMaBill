@@ -335,7 +335,7 @@ function calculateSplit() {
     document.getElementById('finalSplit').innerHTML = resultHTML;*/
 }
 
-function drawSplitCanvas(splitAmounts, splitItems) {
+async function drawSplitCanvas(splitAmounts, splitItems) {
     //let canvas = document.getElementById("splitCanvas");
     canvas = document.createElement("canvas");
     let ctx = canvas.getContext("2d");
@@ -411,6 +411,13 @@ function drawSplitCanvas(splitAmounts, splitItems) {
         ctx.drawImage(canvasRevolut, x, y);
         ctx.drawImage(canvasOther, x+260, y);
     }
+
+
+    //watermark 
+    let watermarkImg = await loadImage("https://alialun.github.io/SplitMaBill/watermark.png");
+    ctx.globalAlpha = 0.3; // Set transparency
+    ctx.drawImage(watermarkImg, canvas.width - watermarkImg.width - 10, 10);
+    ctx.globalAlpha = 1.0; // Reset transparency
 
     let imgElement = document.getElementById("splitImg");
 
@@ -895,7 +902,14 @@ async function processImage(id) {
     anyQR = true;
 }
 
-
+function loadImage(src) {
+    return new Promise((resolve, reject) => {
+        let img = new Image();
+        img.src = src;
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+    });
+}
 
 // Call the setup function when the page loads
 setupAutocomplete();
