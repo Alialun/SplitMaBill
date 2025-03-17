@@ -617,7 +617,6 @@ function parseFoodoraOrder() {
         }
         
     }
-
     // Update global items list
     items = parsedItems;
     setTimeout(() => {
@@ -632,6 +631,86 @@ function parseFoodoraOrder() {
     renderItems();
 }
 
+
+function parseFoodoraOrderMarek() {
+    let importTextArea = document.getElementById('import-area');
+    if (!importTextArea) {
+        console.error("Textarea not found!");
+        return;
+    }
+
+    let importText = importTextArea.value;
+    if (!importText || typeof importText !== 'string') {
+        console.error("Invalid or empty input text.");
+        return;
+    }
+
+    let lines = importText.split("\n").map(line => line.trim()).filter(line => line !== "");
+    
+    let parsedItems = [];
+    let quantityPattern = /^(\d+)x\s*/; // Matches "2x " or "3x "
+    let pricePattern = /(\d+,\d{2}|\d+) Kč/; // Matches "318,00 Kč" or "42 Kč"
+    let ignoreKeywords = ["Mezisoučet", "Celkem", "Způsob platby"];
+    let invertKeywords = ["Sleva"];
+    
+    let currentQuantity = 1;
+    let lastItemName = null;
+
+    console.log(lines);
+    for (let i = 0; i < lines.length; i++) {
+        let line = lines[i];
+
+
+        let quantityMatch = line.match(quantityPattern);
+        if (quantityMatch) {
+            currentQuantity = parseInt(quantityMatch[1]);
+            line = line.replace(quantityPattern, "").trim(); // Remove the quantity prefix
+        }
+
+        if (pricePattern.test(line)) {
+            let priceMatch = line.match(pricePattern)[1];
+            let price = parseFloat(priceMatch.replace(",", "."));
+            
+            let itemName = lastItemName ? lastItemName : lines[i - 1];
+            lastItemName = null;
+
+            
+            if (ignoreKeywords.some(keyword => itemName.includes(keyword))) {
+                lastItemName = null;
+                continue;
+            }
+
+            if (invertKeywords.some(keyword => itemName.includes(keyword))) {
+                price = -price;
+            }
+
+            let individualPrice = price / currentQuantity;
+            for (let j = 0; j < currentQuantity; j++) {
+                parsedItems.push({ friends: [], name: itemName, price: individualPrice });
+            }
+            
+            currentQuantity = 1;
+        } else {
+            if (!pricePattern.test(line)) {
+                lastItemName = line;
+            }
+        }
+    }
+    
+    console.log(parsedItems);
+    // Update global items list
+    items = parsedItems;
+    setTimeout(() => {
+        console.log("This message appears after 1 second");
+    }, 1000);
+    
+    // Switch to the "Split" tab
+    openTab('split');
+    setTimeout(() => {
+        console.log("This message appears after 1 second");
+    }, 1000);
+    renderItems();
+}
 
 
 
