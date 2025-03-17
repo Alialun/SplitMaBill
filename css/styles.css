@@ -305,3 +305,25 @@ img {
     display: block;
     margin: auto;
 }
+
+/* Normal state */
+a {
+    color: white; /* Change this to any color you want for the normal state */
+    text-decoration: none; /* Optionally remove underline */
+}
+
+/* Hover state */
+a:hover {
+    color: white; /* Change this to any color you want for hover */
+    text-decoration: underline; /* Optionally add underline on hover */
+}
+
+/* Visited state */
+a:visited {
+    color: white; /* Change this to any color you want for visited links */
+}
+
+/* Active state */
+a:active {
+    color: white; /* Change this to any color you want for active state */
+}
