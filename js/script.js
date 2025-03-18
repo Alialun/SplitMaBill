@@ -27,7 +27,7 @@ function renderFriends() {
     friends.forEach((friend, index) => {
         list.innerHTML += `
             <div class="friend-item">
-                <input type="text" value="${friend}" onchange="updateFriend(${index}, this.value)">
+                <input class="friend-input" type="text" value="${friend}" onchange="updateFriend(${index}, this.value)">
                 <button class="delete-btn" onclick="deleteFriend(${index})">🗑</button>
             </div>
         `;
@@ -220,8 +220,8 @@ function renderItems() {
                         `).join('')}
                     </div>
                 </div>
-                <input type="text" value="${item.name}" onchange="updateItem(${index}, 'name', this.value)">
-                <input type="number" value="${item.price}" onchange="updateItem(${index}, 'price', this.value)">
+                <input type="text" class="item-input" value="${item.name}" onchange="updateItem(${index}, 'name', this.value)">
+                <input type="number" class="item-input" value="${item.price}" onchange="updateItem(${index}, 'price', this.value)">
                 <button class="delete-btn" onclick="deleteItem(${index})">🗑</button>
             </div>
         `;
