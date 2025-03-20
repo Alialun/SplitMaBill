@@ -19,6 +19,46 @@ function openTab(tabName) {
 }
 
 
+//resourcing
+i18next
+      .use(i18nextBrowserLanguageDetector) // Detect user language
+      .use(i18nextXHRBackend) // Load translations via XHR
+      .init({
+        backend: {
+          loadPath: '/locales/{{lng}}.json', // Path to the translation files
+        },
+        fallbackLng: 'en', // Fallback language when the user language isn't available
+        interpolation: {
+          escapeValue: false, // No need to escape HTML
+        },
+      }, function(err, t) {
+        // Apply translations after i18next initialization
+        applyTranslations();
+
+        // Listen for language switcher changes
+        document.getElementById('languageSwitcher').addEventListener('change', (event) => {
+          const selectedLang = event.target.value;
+          i18next.changeLanguage(selectedLang, function() {
+            applyTranslations(); // Reapply translations when language changes
+          });
+        });
+      });
+
+    // Function to apply translations to elements with data-i18n
+    function applyTranslations() {
+      const elements = document.querySelectorAll('[data-res]');
+      elements.forEach((el) => {
+        const key = el.getAttribute('data-res');
+        
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+          el.placeholder = i18next.t(key); // For input placeholders
+        } else {
+          el.innerHTML = i18next.t(key); // For other text content
+        }
+      });
+    }
+
+
 
 ////Friends tab
 function renderFriends() {
