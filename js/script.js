@@ -21,28 +21,32 @@ function openTab(tabName) {
 
 //resourcing
 i18next
-      .use(i18nextBrowserLanguageDetector) // Detect user language
-      .use(i18nextXHRBackend) // Load translations via XHR
-      .init({
-        backend: {
-          loadPath: '/locales/{{lng}}.json', // Path to the translation files
-        },
-        fallbackLng: 'en', // Fallback language when the user language isn't available
-        interpolation: {
-          escapeValue: false, // No need to escape HTML
-        },
-      }, function(err, t) {
-        // Apply translations after i18next initialization
-        applyTranslations();
+  .use(i18nextBrowserLanguageDetector) // Detect user language
+  .use(i18nextXHRBackend) // Load translations via XHR
+  .init({
+    backend: {
+      loadPath: '/locales/{{lng}}.json', // Path to the translation files
+    },
+    fallbackLng: 'en', // Fallback language when user language isn't available
+    interpolation: {
+      escapeValue: false, // No need to escape HTML
+    },
+  }, function(err, t) {
+    // Apply translations after i18next initialization
+    applyTranslations();
 
-        // Listen for language switcher changes
-        document.getElementById('languageSwitcher').addEventListener('change', (event) => {
-          const selectedLang = event.target.value;
-          i18next.changeLanguage(selectedLang, function() {
-            applyTranslations(); // Reapply translations when language changes
-          });
-        });
+    // Set languageSwitcher select to detected language
+    const languageSwitcher = document.getElementById('languageSwitcher');
+    languageSwitcher.value = i18next.language;
+
+    // Listen for language switcher changes
+    languageSwitcher.addEventListener('change', (event) => {
+      const selectedLang = event.target.value;
+      i18next.changeLanguage(selectedLang, function() {
+        applyTranslations(); // Reapply translations when language changes
       });
+    });
+  });
 
     // Function to apply translations to elements with data-i18n
     function applyTranslations() {
@@ -50,11 +54,14 @@ i18next
       elements.forEach((el) => {
         const key = el.getAttribute('data-res');
         
-        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-          el.placeholder = i18next.t(key); // For input placeholders
-        } else {
-          el.innerHTML = i18next.t(key); // For other text content
-        }
+        if (key.includes('placeholder')) {
+            el.placeholder = i18next.t(key);
+          } else if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+            el.value = i18next.t(key);
+          } else {
+            el.innerHTML = i18next.t(key);
+          }
+          
       });
     }
 
@@ -144,7 +151,7 @@ function loadFriends() {
         // **Fix: Read selection from `items` instead of resetting**
         selectedSpan.textContent = hasSelection
             ? (selectedFriends.length > 3 ? selectedFriends.length + " Friends" : selectedFriends.join(", "))
-            : "Split Among All";
+            : i18next.t("split-among-all");
     });
 }
 
@@ -228,7 +235,7 @@ function updateSelectedFriends(select) {
 
     // Update the UI display text
     let selectedSpan = select.querySelector(".selected-options");
-    selectedSpan.textContent = selectedValues.length ? (selectedValues.length > 3 ? selectedValues.length + " Friends" : selectedValues.join(", ")) : "Split Among All";
+    selectedSpan.textContent = selectedValues.length ? (selectedValues.length > 3 ? selectedValues.length + " Friends" : selectedValues.join(", ")) : i18next.t("split-among-all");
 
     // Store the selected values in the element's dataset
     select.dataset.selectedValues = JSON.stringify(selectedValues);
@@ -245,7 +252,7 @@ function renderItems() {
     list.innerHTML = "";
 
     items.forEach((item, index) => {
-        let selectText = item.friends.length ? (item.friends.length > 3 ? item.friends.length + " Friends" : item.friends.join(", ")) : "Split Among All";
+        let selectText = item.friends.length ? (item.friends.length > 3 ? item.friends.length + " Friends" : item.friends.join(", ")) : i18next.t("split-among-all");
         list.innerHTML += `
             <div class="item">
                 <div class="custom-multiselect inline-friend-select" id="inlineFriendSelect-${index}" onclick="toggleDropdown('inlineFriendSelect-${index}')">
@@ -279,7 +286,7 @@ function addItem() {
     if (name && price) {
         // If no one is selected, store as "split" instead of listing all friends
         if (selectedFriends.length === 0) {
-            selectedFriends = ["Split Among All"];
+            selectedFriends = [i18next.t("split-among-all")];
         }
 
         items.push({ friends: selectedFriends, name, price });
@@ -297,7 +304,7 @@ function toggleInlineFriend(index, element) {
     let selectedOptions = select.querySelectorAll(".dropdown-options .selected");
     let selectedValues = Array.from(selectedOptions).map(option => option.dataset.value);
 
-    select.querySelector(".selected-options").textContent = selectedValues.length ? (selectedValues.length > 3 ? selectedValues.length + " Friends" : selectedValues.join(", ")) : "Split Among All";
+    select.querySelector(".selected-options").textContent = selectedValues.length ? (selectedValues.length > 3 ? selectedValues.length + " Friends" : selectedValues.join(", ")) : i18next.t("split-among-all");
 
     // Update the item array
     items[index].friends = selectedValues;
@@ -329,7 +336,7 @@ function calculateSplit() {
 
     // Step 1: Identify friends who have at least one item
     items.forEach(item => {
-        if (item.friends.includes("Split Among All")) {
+        if (item.friends.includes(i18next.t("split-among-all"))) {
             item.friends = []; // Reset to allow dynamic splitting
         }
         item.friends.forEach(friend =>{ if(!activeFriends.includes(friend)) activeFriends.push(friend) });
@@ -380,10 +387,10 @@ async function drawSplitCanvas(splitAmounts, splitItems) {
     canvas = document.createElement("canvas");
     let ctx = canvas.getContext("2d");
 
-    let baseHeight = 75;  // Start with some height for title
-    let nameLineHeight = 20;  // Space per line
-    let itemLineHeight = 16;  // Space per line
-    let spacingHeight = 10;  // Space per line
+    let baseHeight = 150;  // Start with some height for title
+    let nameLineHeight = 40;  // Space per line
+    let itemLineHeight = 32;  // Space per line
+    let spacingHeight = 20;  // Space per line
     let requiredHeight = baseHeight;
 
     // Calculate needed height
@@ -394,10 +401,10 @@ async function drawSplitCanvas(splitAmounts, splitItems) {
     }
     if(anyQR)
     {
-        requiredHeight += 230 + nameLineHeight;
+        requiredHeight += 460 + nameLineHeight;
     }
 
-    canvas.width = 500; // Set width
+    canvas.width = 1000; // Set width
     canvas.height = requiredHeight; // Set new height
 
     // Draw background
@@ -405,7 +412,7 @@ async function drawSplitCanvas(splitAmounts, splitItems) {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     //Draw background gradient
     // Define the gradient at an angle (45°)
-    let gradient = ctx.createLinearGradient(canvas.width/2-50, canvas.height, canvas.width/2+50, 0);
+    let gradient = ctx.createLinearGradient(canvas.width/2-100, canvas.height, canvas.width/2+100, 0);
 
     // Add color stops to create a mirrored effect
     //gradient.addColorStop(0, "#202020"); // Middle transition to blue
@@ -424,29 +431,29 @@ async function drawSplitCanvas(splitAmounts, splitItems) {
     ctx.strokeRect(5, 5, canvas.width-10, canvas.height-10); // (x, y, width, height)
 
     // Set text styles
-    ctx.font = "16px Arial";
+    ctx.font = "32px Arial";
     ctx.fillStyle = "white"; 
 
-    let x = 20;
-    let y = 40;
+    let x = 40;
+    let y = 80;
 
     // Draw title
-    ctx.font = "12px Arial";
+    ctx.font = "24px Arial";
     ctx.textAlign = "right";
-    ctx.fillText("Generated by alialun.github.io/SplitMaBill", canvas.width-10, canvas.height-10);
+    ctx.fillText("Generated by alialun.github.io/SplitMaBill", canvas.width-20, canvas.height-20);
     ctx.textAlign = "left";
-    ctx.font = "20px Arial";
+    ctx.font = "40px Arial";
     ctx.fillText("Souhrn - "+new Date().toLocaleDateString(), x, y);
-    y += 30;
+    y += 60;
 
     // Reset font for details
 
     // Draw each person's items
     for (let person in splitItems) {
-        ctx.font = "bold 16px Arial";
+        ctx.font = "bold 32px Arial";
         ctx.fillText(person + " - " + splitAmounts[person].toFixed(0) + " Kč", x, y);
         y += nameLineHeight;
-        ctx.font = "12px Arial";
+        ctx.font = "24px Arial";
 
         splitItems[person].forEach(item => {
             ctx.fillText("- " + item.name.slice(0,55) + ": " + item.price.toFixed(2)+" Kč", x + 20, y);
@@ -463,20 +470,15 @@ async function drawSplitCanvas(splitAmounts, splitItems) {
         let ctxRevolut = canvasRevolut.getContext("2d");
         let canvasOther = document.getElementById("canvasOther");
         let ctxOther = canvasOther.getContext("2d");
-        /*ctxRevolut.lineWidth = 2; // Set thickness of the outline
-        ctxRevolut.strokeStyle = "rgba(255, 255, 255, 0.6)"; // White color with 50% transparency
-        ctxRevolut.strokeRect(1, 1, canvasRevolut.width-2, canvasRevolut.height-2); // (x, y, width, height)
-        ctxOther.lineWidth = 2; // Set thickness of the outline
-        ctxOther.strokeStyle = "rgba(255, 255, 255, 0.6)"; // White color with 50% transparency
-        ctxOther.strokeRect(1, 1, canvasOther.width-2, canvasOther.height-2); // (x, y, width, height)*/
-        ctx.font = "bold 16px Arial";
+
+        ctx.font = "bold 32px Arial";
         ctx.textAlign = "center";
-        ctx.fillText("Revolut", x+100, y+10);
-        ctx.fillText("Banka", x+360, y+10);
+        ctx.fillText("Revolut", x+200, y+20);
+        ctx.fillText("Banka", x+720, y+20);
         ctx.textAlign = "left";
         y += nameLineHeight;
-        ctx.drawImage(canvasRevolut, x, y);
-        ctx.drawImage(canvasOther, x+260, y);
+        ctx.drawImage(canvasRevolut, x, y, 400, 400);
+        ctx.drawImage(canvasOther, x+520, y, 400, 400);
     }
 
 
@@ -562,8 +564,8 @@ function renderPastBills() {
                         `;
                     }).join('')}
                 </ul>
-                <button class="btn edit-btn" onclick="editBill(${billIndex})">📑 Duplicate</button>
-                <button class="btn delete-btn" onclick="deleteBill(${billIndex})">🗑 Delete</button>
+                <button class="btn edit-btn" data-res="bill-duplicate-btn" onclick="editBill(${billIndex})">`+i18next.t("bill-duplicate-btn")+`</button>
+                <button class="btn delete-btn" data-res="bill-delete-btn" onclick="deleteBill(${billIndex})">`+i18next.t("bill-delete-btn")+`</button>
             </div>
         `;
         billsList.innerHTML += billHTML;
@@ -944,7 +946,7 @@ async function processImage(id) {
     let ctx = canvas.getContext("2d");
 
     let { width, height } = img;
-    let scale = 200 / Math.min(width, height); // Scale so the larger dimension is 200px
+    let scale = 400 / Math.min(width, height); // Scale so the larger dimension is 200px
     let newWidth = Math.round(width * scale);
     let newHeight = Math.round(height * scale);
 
@@ -957,17 +959,17 @@ async function processImage(id) {
     // Draw resized image
     tempCtx.drawImage(img, 0, 0, newWidth, newHeight);
 
-    // Crop the center to make a 200x200 square
-    let startX = Math.max(0, (newWidth - 200) / 2);
-    let startY = Math.max(0, (newHeight - 200) / 2);
+    // Crop the center to make a 400x400 square
+    let startX = Math.max(0, (newWidth - 400) / 2);
+    let startY = Math.max(0, (newHeight - 400) / 2);
 
     // Draw cropped image onto the main canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(tempCanvas, startX, startY, 200, 200, 0, 0, 200, 200);
+    ctx.drawImage(tempCanvas, startX, startY, 400, 400, 0, 0, 400, 400);
 
     ctx.lineWidth = 2; // Set thickness of the outline
     ctx.strokeStyle = "rgba(255, 255, 255, 0.6)"; // White color with 50% transparency
-    ctx.strokeRect(1, 1, canvas.width-2, canvas.height-2); // (x, y, width, height)
+    ctx.strokeRect(1, 1, canvas.width-4, canvas.height-4); // (x, y, width, height)
 
     saveCanvasToLocalStorage("canvas" + id);
     anyQR = true;

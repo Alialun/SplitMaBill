@@ -9,6 +9,7 @@ body {
 
 /* Container */
 .container {
+    position: relative;
     width: 90%;
     max-width: 800px;
     margin: 50px auto;
@@ -303,6 +304,7 @@ table {
 img {
     display: block;
     margin: auto;
+    max-width: 500px;
 }
 
 /* Normal state */
@@ -326,6 +328,13 @@ a:visited {
 a:active {
     color: white; /* Change this to any color you want for active state */
 }
+
+#languageSwitcher {
+    position: absolute; /* Positioning the select absolutely inside the container */
+    top: 0;            /* Align to top */
+    right: 0;          /* Align to right */
+    margin: 10px;      /* Optional margin from edges */
+  }
 
 /* Mobile responsiveness */
 @media (max-width: 960px) {
