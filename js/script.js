@@ -25,7 +25,7 @@ i18next
   .use(i18nextXHRBackend) // Load translations via XHR
   .init({
     backend: {
-      loadPath: '/locales/{{lng}}.json', // Path to the translation files
+      loadPath: './locales/{{lng}}.json', // Path to the translation files
     },
     fallbackLng: 'en', // Fallback language when user language isn't available
     interpolation: {
