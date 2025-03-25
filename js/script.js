@@ -891,6 +891,72 @@ function parseFoodoraOrderMarek() {
     renderItems();
 }
 
+function parseReplayOrder() {
+    let importTextArea = document.getElementById('import-area');
+    if (!importTextArea) {
+        console.error("Textarea not found!");
+        return;
+    }
+
+    let importText = importTextArea.value;
+    if (!importText || typeof importText !== 'string') {
+        console.error("Invalid or empty input text.");
+        return;
+    }
+
+    const lines = importText.split("\n").map(l => l.trim()).filter(l => l !== "");
+
+    const parsedItems = [];
+    const header = "Množství Za kus Celkem";
+    const tipKeyword = "Spropitné:";
+
+    for (let i = 0; i < lines.length; i++) {
+        let line = lines[i];
+
+        if (line === tipKeyword && lines[i + 1]) {
+            let tipAmount = parseFloat(lines[i + 1].replace("Kč", "").trim());
+            parsedItems.push({ friends: [], name: "Spropitné", price: tipAmount });
+            i++; // Skip next line (already processed)
+            continue;
+        }
+
+        if (lines[i + 1] === header && lines[i + 2]) {
+            // Remove trailing price (e.g. "10Kč") from name
+            let itemName = line.replace(/\d+Kč$/, "").trim();
+
+            // Parse the third line for quantity and total price
+            const quantityPriceMatch = lines[i + 2].match(/^(\d+)x\s+\d+Kč\s+(\d+)Kč$/);
+            if (quantityPriceMatch) {
+                const quantity = parseInt(quantityPriceMatch[1]);
+                const totalPrice = parseFloat(quantityPriceMatch[2]);
+                const individualPrice = totalPrice / quantity;
+
+                for (let j = 0; j < quantity; j++) {
+                    parsedItems.push({ friends: [], name: itemName, price: individualPrice });
+                }
+                i += 2; // Skip header and quantity line (already processed)
+            }
+        }
+    }
+
+    console.log(parsedItems);
+    items = parsedItems;
+
+    setTimeout(() => {
+        console.log("Items rendered after 1 second");
+    }, 1000);
+
+    openTab('split');
+
+    setTimeout(() => {
+        renderItems();
+    }, 1000);
+}
+
+
+
+
+
 function saveCanvasToLocalStorage(canvasId) {
     let canvas = document.getElementById(canvasId);
     let dataURL = canvas.toDataURL("image/png"); // Convert to Base64 PNG
