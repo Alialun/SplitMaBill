@@ -2,6 +2,9 @@ let friends = JSON.parse(localStorage.getItem('friends')) || [];
 let items = [];
 let anyQR = false;
 
+let toastErrorCol = "#aa0000";
+let toastOkCol = "#28a745";
+
 function openTab(tabName) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
     document.getElementById(tabName).classList.remove('hidden');
@@ -111,7 +114,7 @@ function loadFriends() {
         let selectedSpan = select.querySelector(".selected-options");
 
         if (!dropdown) {
-            console.error("Dropdown not found inside:", select);
+            showToast(`Dropdown not found inside: ${select}`, toastErrorCol);
             return;
         }
 
@@ -164,7 +167,7 @@ function toggleDropdown(id, event) {
     let parentItem = document.querySelector(`#${id}`).closest(".item"); // Get the item's container
 
     if (!dropdown) {
-        console.error("Dropdown not found for ID:", id);
+        showToast(`Dropdown not found for ID: ${id}`, toastErrorCol);
         return;
     }
 
@@ -580,7 +583,7 @@ function markPersonPaid(billIndex, friend) {
         localStorage.setItem('bills', JSON.stringify(savedBills));
         renderPastBills(); // Refresh the UI
     } else {
-        console.error(`Invalid bill or friend at ${billIndex}, ${friend}`);
+        showToast(`Invalid bill or friend at ${billIndex}, ${friend}`, toastErrorCol);
     }
 }
 
@@ -592,7 +595,7 @@ function markPersonUnpaid(billIndex, friend) {
         localStorage.setItem('bills', JSON.stringify(savedBills));
         renderPastBills(); // Refresh the UI
     } else {
-        console.error(`Invalid bill or friend at ${billIndex}, ${friend}`);
+        showToast(`Invalid bill or friend at ${billIndex}, ${friend}`, toastErrorCol);
     }
 }
 
@@ -606,7 +609,7 @@ function editBill(index) {
         renderItems(); // Refresh the UI with the bill details
         openTab('split'); // Navigate to the "Split" tab
     } else {
-        console.error(`Bill at index ${index} is not correctly formatted.`);
+        showToast(`Bill at index ${index} is not correctly formatted.`, toastErrorCol);
     }
 }
 
@@ -724,13 +727,13 @@ function setupAutocomplete() {
 function parseFoodoraOrder() {
     let importTextArea = document.getElementById('import-area');
     if (!importTextArea) {
-        console.error("Textarea not found!");
+        showToast("Text area not found!", toastErrorCol);
         return;
     }
 
     let importText = importTextArea.value;
     if (!importText || typeof importText !== 'string') {
-        console.error("Invalid or empty input text.");
+        showToast(i18next.t("empty-text-area-error"), toastErrorCol);
         return;
     }
 
@@ -814,13 +817,13 @@ function parseFoodoraOrder() {
 function parseFoodoraOrderMarek() {
     let importTextArea = document.getElementById('import-area');
     if (!importTextArea) {
-        console.error("Textarea not found!");
+        showToast("Text area not found!", toastErrorCol);
         return;
     }
 
     let importText = importTextArea.value;
     if (!importText || typeof importText !== 'string') {
-        console.error("Invalid or empty input text.");
+        showToast(i18next.t("empty-text-area-error"), toastErrorCol);
         return;
     }
 
@@ -894,13 +897,13 @@ function parseFoodoraOrderMarek() {
 function parseReplayOrder() {
     let importTextArea = document.getElementById('import-area');
     if (!importTextArea) {
-        console.error("Textarea not found!");
+        showToast("Text area not found!", toastErrorCol);
         return;
     }
 
     let importText = importTextArea.value;
     if (!importText || typeof importText !== 'string') {
-        console.error("Invalid or empty input text.");
+        showToast(i18next.t("empty-text-area-error"), toastErrorCol);
         return;
     }
 
@@ -957,13 +960,13 @@ function parseReplayOrder() {
 function getGPTPromptOrder() {
     let importTextArea = document.getElementById('import-area');
     if (!importTextArea) {
-        console.error("Textarea not found!");
+        showToast("Text area not found!", toastErrorCol);
         return;
     }
 
     let importText = importTextArea.value;
     if (!importText || typeof importText !== 'string') {
-        console.error("Invalid or empty input text.");
+        showToast(i18next.t("empty-text-area-error"), toastErrorCol);
         return;
     }
 
@@ -989,6 +992,7 @@ The bill:
 `;
     
     navigator.clipboard.writeText(prompt + importText);
+    showToast(i18next.t("copied-to-clipboard"), toastOkCol);
     importTextArea.value = '';
 
 }
@@ -997,13 +1001,13 @@ The bill:
 function parseGPTOrder() {
     let importTextArea = document.getElementById('import-area');
     if (!importTextArea) {
-        console.error("Textarea not found!");
+        showToast("Text area not found!", toastErrorCol);
         return;
     }
 
     let importText = importTextArea.value;
     if (!importText || typeof importText !== 'string') {
-        console.error("Invalid or empty input text.");
+        showToast(i18next.t("empty-text-area-error"), toastErrorCol);
         return;
     }
 
@@ -1133,6 +1137,28 @@ function loadImage(src) {
         img.onerror = reject;
     });
 }
+
+function showToast(message, color = '#444', duration = 5000) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+
+    toast.className = 'toast';
+    toast.style.backgroundColor = color;
+    toast.textContent = message;
+
+    // Click to dismiss
+    toast.addEventListener('click', () => {
+        toast.remove();
+    });
+
+    // Auto remove after `duration`
+    setTimeout(() => {
+        toast.remove();
+    }, duration);
+
+    container.appendChild(toast);
+}
+
 
 // Call the setup function when the page loads
 setupAutocomplete();
