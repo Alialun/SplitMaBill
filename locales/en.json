@@ -50,5 +50,9 @@
     "bill-duplicate-btn": "📑 Duplicate",
     "bill-delete-btn": "🗑 Delete",
     "empty-text-area-error": "Text area is empty!",
-    "copied-to-clipboard": "Copied to clipboard."
+    "copied-to-clipboard": "Copied to clipboard.",
+    "saved-to-history": "Saved to history.",
+    "missing-name-or-price": "Please fill in the item name and price.",
+    "item-deleted": "Item deleted.",
+    "friend-deleted": "Friend deleted."
 }

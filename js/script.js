@@ -102,6 +102,7 @@ function updateFriend(index, newName) {
 function deleteFriend(index) {
     friends.splice(index, 1);
     localStorage.setItem('friends', JSON.stringify(friends));
+    showToast(i18next.t("friend-deleted"), toastOkCol);
     renderFriends();
 }
 
@@ -295,6 +296,10 @@ function addItem() {
         items.push({ friends: selectedFriends, name, price });
         renderItems();
     }
+    else
+    {
+        showToast(i18next.t("missing-name-or-price"), toastErrorCol);
+    }
 }
 
 
@@ -328,6 +333,7 @@ function updateItem(index, field, value) {
 
 function deleteItem(index) {
     items.splice(index, 1); // Remove the item from the list
+    showToast(i18next.t("item-deleted"), toastOkCol);
     renderItems(); // Refresh the UI
 }
 
@@ -527,6 +533,8 @@ function appendToPastBillsLocalStorage(items, splitAmounts) {
 
     // Save updated bills list
     localStorage.setItem('bills', JSON.stringify(savedBills));
+    
+    showToast(i18next.t("saved-to-history"), toastOkCol);
 }
 
 

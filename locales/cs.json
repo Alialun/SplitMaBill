@@ -50,5 +50,9 @@
     "bill-duplicate-btn": "📑 Duplikovat",
     "bill-delete-btn": "🗑 Smazat",
     "empty-text-area-error": "Textové pole je prázdné!",
-    "copied-to-clipboard": "Zkopírováno do schránky."
+    "copied-to-clipboard": "Zkopírováno do schránky.",
+    "saved-to-history": "Uloženo do historie.",
+    "missing-name-or-price": "Vyplňte název a cenu položky.",
+    "item-deleted": "Položka smazána.",
+    "friend-deleted": "Přítel smazán."
 }
