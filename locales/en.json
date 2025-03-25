@@ -33,7 +33,7 @@
     "import-title": "Direct Import",
     "import-regular-title": "🍟 Regular parsers 🌮",
     "import-gpt-title": "🤖 GPT parser (EXPERIMENTAL) 🤖",
-    "import-gpt-description": "1. Insert your order into the text area then click 'Get prompt'.<br> 2. Go to ChatGPT and press Ctrl+V and Enter. <br> 3. Copy GPT's answer and paste it here into the text area. <br> 4. Click 'Parse'.",
+    "import-gpt-description": "1. Insert your order into the text area then click 'Get prompt'.<br> The prompt is copied to your clipboard automatically.<br> 2. Go to ChatGPT and press Ctrl+V and Enter. <br> 3. Copy GPT's answer and paste it here into the text area. <br> 4. Click 'Parse'.",
     "import-area-placeholder": "Copy paste list",
     "import-foodora-btn": "✅ Foodora",
     "import-foodora-marek-btn": "✅ Foodora (Marek)",
