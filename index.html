@@ -89,11 +89,24 @@
         <div id="import" class="tab-content hidden">
             <h2 data-res="import-title"></h2>
             <div class="input-group">
-                <textarea id="import-area" rows="60" data-res="import-area-placeholder" placeholder=""></textarea>
+                <textarea id="import-area" rows="30" data-res="import-area-placeholder" placeholder=""></textarea>
             </div>
+            <h3 data-res="import-regular-title"></h3>
             <button class="btn glass-btn" onclick="parseFoodoraOrder()" data-res="import-foodora-btn"></button>
             <button class="btn glass-btn" onclick="parseFoodoraOrderMarek()" data-res="import-foodora-marek-btn"></button>
             <button class="btn glass-btn" onclick="parseReplayOrder()" data-res="import-replay-btn"></button>
+            <br><h3 data-res="import-gpt-title"></h3>
+            <table>
+                <tr>
+                    <td>
+                        <span data-res="import-gpt-description"></span>
+                    </td>
+                    <td>
+                        <button class="btn glass-btn" onclick="getGPTPromptOrder()" data-res="import-gpt-prompt-btn"></button>
+                        <button class="btn glass-btn" onclick="parseGPTOrder()" data-res="import-gpt-input-btn"></button>
+                    </td>
+                </tr>
+            </table>
         </div>
         
 

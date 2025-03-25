@@ -953,8 +953,91 @@ function parseReplayOrder() {
     }, 1000);
 }
 
+//GPT parser
+function getGPTPromptOrder() {
+    let importTextArea = document.getElementById('import-area');
+    if (!importTextArea) {
+        console.error("Textarea not found!");
+        return;
+    }
+
+    let importText = importTextArea.value;
+    if (!importText || typeof importText !== 'string') {
+        console.error("Invalid or empty input text.");
+        return;
+    }
+
+    let prompt = 
+`This is a bill for my order. I want you to parse it and give it to me in a very specific format.
+1) Extract individual items (their Name, Price, Amount)
+2) Ignore any items that are sums (Celkem, Total, Bez DPH, Mezisoučet, etc.)
+3) DO NOT ignore service fees, delivery, tip, include those, make items out of these
+4) for items that have greater amount than 1, divide the total price and duplicate them X times, where X is their amount.
+5) Return me a block of code (ONLY block of code, no text before or after) in this specific format. Groups of 2 rows per item
+\`\`\`
+Item name
+Item price
+Item name
+Item price
+Item name
+Item price
+etc.
+\`\`\`
+DO NOT ADD ANYTHING ELSE. DO NOT INCLUDE CURRENCY, make the prices just plain numbers. For lines that are like sleva or some kind of price reduction, make the price negative.
+
+The bill:
+`;
+    
+    navigator.clipboard.writeText(prompt + importText);
+    importTextArea.value = '';
+
+}
 
 
+function parseGPTOrder() {
+    let importTextArea = document.getElementById('import-area');
+    if (!importTextArea) {
+        console.error("Textarea not found!");
+        return;
+    }
+
+    let importText = importTextArea.value;
+    if (!importText || typeof importText !== 'string') {
+        console.error("Invalid or empty input text.");
+        return;
+    }
+
+    let lines = importText.split("\n").map(line => line.trim()).filter(line => line !== "");
+    
+    let parsedItems = [];
+    let itemName = "";
+    
+    console.log(lines);
+    for (let i = 0; i < lines.length; i++) {
+        if(i%2 == 1)
+        {
+            parsedItems.push({ friends: [], name: itemName, price: lines[i] })
+        }
+        else
+        {
+            itemName = lines[i];
+        }
+    }
+    
+    console.log(parsedItems);
+    // Update global items list
+    items = parsedItems;
+    setTimeout(() => {
+        console.log("This message appears after 1 second");
+    }, 1000);
+    
+    // Switch to the "Split" tab
+    openTab('split');
+    setTimeout(() => {
+        console.log("This message appears after 1 second");
+    }, 1000);
+    renderItems();
+}
 
 
 function saveCanvasToLocalStorage(canvasId) {
