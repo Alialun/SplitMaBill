@@ -995,6 +995,7 @@ Item price
 etc.
 \`\`\`
 DO NOT ADD ANYTHING ELSE. DO NOT INCLUDE CURRENCY, make the prices just plain numbers. For lines that are like sleva or some kind of price reduction, make the price negative.
+Never make packaging costs as extra rows, include it in the item prices (you can check if they already are part of the price by checking the total price of the bill).
 
 The bill:
 `;
