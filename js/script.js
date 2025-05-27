@@ -974,8 +974,8 @@ function getGPTPromptOrder() {
 
     let importText = importTextArea.value;
     if (!importText || typeof importText !== 'string') {
-        showToast(i18next.t("empty-text-area-error"), toastErrorCol);
-        return;
+        importText = "";
+        //showToast(i18next.t("empty-text-area-error"), toastErrorCol);
     }
 
     let prompt = 
