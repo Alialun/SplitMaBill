@@ -74,6 +74,7 @@ i18next
 function renderFriends() {
     const list = document.getElementById('friendsList');
     list.innerHTML = "";
+    friends.sort();
     friends.forEach((friend, index) => {
         list.innerHTML += `
             <div class="friend-item">
