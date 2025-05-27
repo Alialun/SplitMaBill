@@ -966,17 +966,17 @@ function parseReplayOrder() {
 
 //GPT parser
 function getGPTPromptOrder() {
-    let importTextArea = document.getElementById('import-area');
-    if (!importTextArea) {
-        showToast("Text area not found!", toastErrorCol);
-        return;
-    }
+    // let importTextArea = document.getElementById('import-area');
+    // if (!importTextArea) {
+    //     showToast("Text area not found!", toastErrorCol);
+    //     return;
+    // }
 
-    let importText = importTextArea.value;
-    if (!importText || typeof importText !== 'string') {
-        importText = "";
-        //showToast(i18next.t("empty-text-area-error"), toastErrorCol);
-    }
+    // let importText = importTextArea.value;
+    // if (!importText || typeof importText !== 'string') {
+    //     importText = "";
+    //     //showToast(i18next.t("empty-text-area-error"), toastErrorCol);
+    // }
 
     let prompt = 
 `This is a bill for my order. I want you to parse it and give it to me in a very specific format.
@@ -1000,7 +1000,7 @@ Never make packaging costs as extra rows, include it in the item prices (you can
 The bill:
 `;
     
-    navigator.clipboard.writeText(prompt + importText);
+    navigator.clipboard.writeText(prompt);
     showToast(i18next.t("copied-to-clipboard"), toastOkCol);
     importTextArea.value = '';
 
