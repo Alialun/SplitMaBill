@@ -32,7 +32,7 @@
   "split-final-title": "División final",
   "import-title": "Importación directa",
   "import-regular-title": "🍟 Parsers regulares 🌮",
-  "import-gpt-title": "🤖 Parser GPT (EXPERIMENTAL) 🤖",
+  "import-gpt-title": "🤖 Parser GPT 🤖",
   "import-gpt-description": "1. Haz clic en 'Obtener prompt'.<br> El prompt se copiará automáticamente al portapapeles.<br> 2. Ve a ChatGPT y pégalo (aún no envíes el mensaje).<br> 3. Haz una captura de tu pedido con Ctrl + Shift + S<br> y adjunta esta captura al mensaje en GPT y luego envíalo.<br> 4. Copia la respuesta de GPT y pégala aquí en el campo de texto.<br> 5. Haz clic en 'Procesar'.",
   "import-area-placeholder": "Copiar y pegar lista",
   "import-foodora-btn": "✅ Foodora",

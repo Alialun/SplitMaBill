@@ -32,7 +32,7 @@
   "split-final-title": "Výstupní Dekód",
   "import-title": "Exogenní Datový Transfer",
   "import-regular-title": "🍟 Parsery Standardního Formátu 🌮",
-  "import-gpt-title": "🤖 NLP Analyzátor Vstupního Tokenu (EXPERIMENTÁLNÍ) 🤖",
+  "import-gpt-title": "🤖 NLP Analyzátor Vstupního Tokenu 🤖",
   "import-gpt-description": "1. Iniciujte sekvenci získání promptu výběrem akčního prvku „Získat prompt“.<br> Obsah promptu bude automaticky serializován a uložen do clipboardového bufferu systémového prostředí.<br> 2. Otevřete rozhraní ChatGPT<br> a iniciujte vložení serializovaného datového blobu (odesílání zatím neprovádějte).<br> 3. Proveďte vizuální snímek objednávkového payloadu pomocí standardního vstupního zkratu Ctrl + Shift + S.<br> Přiložte obrazový vstup jako přílohu k textovému promptu a iniciujte odeslání do modelu.<br> 4. Po obdržení výstupního JSON respondu extrahujte relevantní data<br> a reinjektujte je do lokálního textového pole.<br> 5. Dokončete proces kliknutím na ovládací prvek 'Zpracovat'.",
   "import-area-placeholder": "Vlož textový payload",
   "import-foodora-btn": "✅ Foodora Parser",

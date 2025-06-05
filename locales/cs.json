@@ -32,7 +32,7 @@
   "split-final-title": "Finální rozdělení",
   "import-title": "Přímé nahrání",
   "import-regular-title": "🍟 Běžné vkládání 🌮",
-  "import-gpt-title": "🤖 GPT vkládání (EXPERIMENTÁLNÍ) 🤖",
+  "import-gpt-title": "🤖 GPT vkládání 🤖",
   "import-gpt-description": "1. Klikněte na 'Získat prompt'.<br> Prompt se automaticky zkopíruje do vaší schránky.<br> 2. Přejděte do ChatGPT a vložte do něj. (zprávu ještě neodesílejte) <br> 3. Udělejte výstřižek vaší objednávky pomocí Ctrl + Shift + S<br> a tento výstřižek poté přiložte ke zprávě v GPT a odešlete jí. <br> 4. Zkopírujte odpověď GPT a vložte ji sem do textového pole. <br> 5. Klikněte na 'Zpracovat'.",
   "import-area-placeholder": "Vložte objednávku",
   "import-foodora-btn": "✅ Foodora",
