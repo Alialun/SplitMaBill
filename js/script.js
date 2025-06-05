@@ -359,9 +359,10 @@ function calculateSplit() {
     // Step 3: Distribute item costs
     items.forEach(item => {
         let splitBetween = item.friends.length > 0 ? item.friends : Array.from(activeFriends);
+        let splitSymbol = ['','½ z ','⅓ z ','¼ z ','⅕ z ','⅙ z ','⅟n z '][Math.min(splitBetween.length-1,6)];
         let share = item.price / splitBetween.length;
 
-        let edittedItem = { name: item.name, price: share};
+        let edittedItem = { name: splitSymbol+item.name, price: share};
         edittedItem.price = share;
 
         splitBetween.forEach(friend => {
