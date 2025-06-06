@@ -98,18 +98,10 @@
                 <textarea id="import-area" rows="30" data-res="import-area-placeholder" placeholder=""></textarea>
             </div>
             <h3 data-res="import-gpt-title"></h3>
-            <table>
-                <tr>
-                    <td>
-                        <span data-res="import-gpt-description"></span>
-                    </td>
-                    <td>
-                        <button class="btn glass-btn" onclick="getGPTPromptOrder()" data-res="import-gpt-prompt-btn"></button>
-                        <br>
-                        <button class="btn glass-btn" onclick="parseGPTOrder()" data-res="import-gpt-input-btn"></button>
-                    </td>
-                </tr>
-            </table>
+            <button class="btn glass-btn" onclick="getGPTPromptOrder()" data-res="import-gpt-prompt-btn"></button>
+            <button class="btn glass-btn" onclick="parseGPTOrder()" data-res="import-gpt-input-btn"></button>
+            <br>
+            <span data-res="import-gpt-description"></span>
             <br>
             <h3 data-res="import-regular-title"></h3>
             <button class="btn glass-btn" onclick="parseFoodoraOrder()" data-res="import-foodora-btn"></button>
