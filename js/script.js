@@ -309,7 +309,7 @@ function calculateSplit() {
     // Init balances
     activeFriends.forEach(friend => splitAmounts[friend] = 0);
 
-    items.forEach(item => {
+    items.forEach((item, i) => {
         let splits = item.splits || {};
         let keys = Object.keys(splits);
         let localFriends, localUnits;
@@ -324,7 +324,7 @@ function calculateSplit() {
                 let share = (splits[friend] / totalUnits) * item.price;
                 splitAmounts[friend] += share;
                 if (!splitItems[friend]) splitItems[friend] = [];
-                splitItems[friend].push({ name: item.name, price: share });
+                splitItems[friend].push({ name: item.name, price: share, originalIndex: i });
             });
         } else {
             // No splits assigned, split among all active friends
@@ -332,7 +332,7 @@ function calculateSplit() {
             activeFriends.forEach(friend => {
                 splitAmounts[friend] += evenShare;
                 if (!splitItems[friend]) splitItems[friend] = [];
-                splitItems[friend].push({ name: item.name, price: evenShare });
+                splitItems[friend].push({ name: item.name, price: evenShare, originalIndex: i });
             });
         }
     });
@@ -418,29 +418,25 @@ async function drawSplitCanvas(splitAmounts, splitItems) {
         ctx.font = "24px Arial";
 
         splitItems[person].forEach(item => {
-            // Try to find the matching item by name
-            let matchedItem = items.find(it => it.name === item.name);
+            let matchedItem = items[item.originalIndex];
 
             let units = 1, totalUnits = 1, showFraction = false;
             if (matchedItem) {
-                // If there is a custom split
                 if (matchedItem.splits && Object.keys(matchedItem.splits).length > 0) {
                     totalUnits = Object.values(matchedItem.splits).reduce((a, b) => a + b, 0);
                     units = matchedItem.splits[person] || 0;
                 } else {
-                    // Even split: each person gets 1 unit, total = number of active friends on this bill
-                    // Count all friends who have a splitAmount for this bill (i.e., keys in splitAmounts)
-                    // Or, more robust: pass in the list of activeFriends if you have it
                     totalUnits = Object.keys(splitAmounts).length;
                     units = 1;
                 }
                 showFraction = totalUnits > 1;
             }
 
-            let fraction = showFraction ? `${units}/${totalUnits} ` : "";
+            let fraction = showFraction ? `(${units}/${totalUnits}) ` : "";
             ctx.fillText(`- ${fraction}${item.name.slice(0,55)}: ${item.price.toFixed(2)} Kč`, x + 20, y);
             y += itemLineHeight;
         });
+
 
 
         y += spacingHeight; // Extra space between people
