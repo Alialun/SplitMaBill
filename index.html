@@ -24,7 +24,7 @@
             <option value="trl">Zandalari</option>
             <option value="mrk">Marekština</option>
         </select>
-        <h1>Split'ma'bill</h1>
+        <h1>Split'ma'bill - <i style="color:aqua">Rationed</i></h1>
 
         <div class="tab-buttons">
             <button class="tab-btn active" onclick="openTab('tutorial')" data-res="tutorial-tab">Tutorial ❓</button>
@@ -74,11 +74,7 @@
         <!-- Bill Splitting -->
         <div id="split" class="tab-content hidden">
             <h2 data-res="split-title"></h2>
-            <div class="input-group">
-                <div class="custom-multiselect" id="friendSelect" onclick="toggleDropdown('friendSelect')">
-                    <span class="selected-options" data-res="split-among-all"></span>
-                    <div class="dropdown-options hidden"></div>
-                </div>                              
+            <div class="input-group">                             
                 <input type="text" id="itemName" data-res="split-item-name-placeholder" placeholder="">
                 <input type="number" id="itemPrice" data-res="split-price-placeholder" placeholder="">
                 <button class="btn glass-btn" onclick="addItem()" data-res="split-add-item-btn"></button>
@@ -102,11 +98,13 @@
             <button class="btn glass-btn" onclick="parseGPTOrder()" data-res="import-gpt-input-btn"></button>
             <br>
             <span data-res="import-gpt-description"></span>
-            <br>
+            <h3 data-res="import-regular-title"></h3>
+            <i><span>Již není podporováno.</span></i>
+            <!-- <br>
             <h3 data-res="import-regular-title"></h3>
             <button class="btn glass-btn" onclick="parseFoodoraOrder()" data-res="import-foodora-btn"></button>
             <button class="btn glass-btn" onclick="parseFoodoraOrderMarek()" data-res="import-foodora-marek-btn"></button>
-            <button class="btn glass-btn" onclick="parseReplayOrder()" data-res="import-replay-btn"></button>
+            <button class="btn glass-btn" onclick="parseReplayOrder()" data-res="import-replay-btn"></button> -->
         </div>
         
 
@@ -146,6 +144,21 @@
 
 </div>
 
-    <script src="js/script.js"></script>
+<div id="splitModal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeSplitModal()">&times;</span>
+        <h3>Rozdělit položku</h3>
+        <div class="split-modal-searcharea">
+            <input type="text" id="friendSearch" placeholder="Vyhledat a přidat prátelé..." autocomplete="off">
+            <div id="searchResults"></div>
+            <div id="assignedFriendsList"></div>
+            <button class="btn save-btn" onclick="saveSplit()">Uložit</button>
+        </div>
+    </div>
+</div>
+
+<script src="js/script.js"></script>
+
+
 </body>
 </html>

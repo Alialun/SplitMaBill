@@ -93,6 +93,100 @@ textarea {
     background: rgba(255, 255, 255, 0.4);
 }
 
+.split-summary {
+    color: aqua;
+    font-size: 0.95em;
+    margin-left: 18px;
+    font-style: italic;
+    flex: 1 1 auto;
+    min-width: 120px;
+    text-align: left;
+    opacity: 0.85;
+}
+
+/* Modal header */
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Friend search */
+#friendSearch {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    background: #232a30;
+    border: 1px solid #2e3e48;
+    color: #aadfff;
+    font-size: 1em;
+}
+
+/* Search results styling */
+
+#assignedFriendsList {
+    margin-bottom: 16px;
+}
+
+/* Friend/unit list in modal */
+.friend-unit {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: rgba(255,255,255,0.07);
+    padding: 8px 10px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+    border: 1px solid #273f54;
+}
+.friend-unit span#ratio {
+    text-align: right;
+    color: #fff;
+    flex: 2 2 50px;
+}
+.friend-unit span#friend {
+    color: #fff;
+    flex: 2 2 100px;
+    text-align: left;
+}
+.friend-unit input[type="number"] {
+    width: 100px;
+    background: #223b47;
+    color: #d0efff;
+    border-radius: 3px;
+    border: 1px solid #3c5973;
+    padding: 6px 4px;
+    font-size: 1em;
+    margin-right: 6px;
+}
+.friend-unit .delete-btn {
+    background: #e44;
+    color: #fff;
+    border-radius: 3px;
+    border: none;
+    padding: 4px 9px;
+    transition: background 0.18s;
+}
+.friend-unit .delete-btn:hover {
+    background: #c33;
+}
+
+.save-btn {
+    margin-top: 12px;
+    width: 100%;
+    background: #33a6c3;
+    color: #fff;
+    font-size: 1.1em;
+    border-radius: 3px;
+    border: none;
+    padding: 4px 9px;
+    transition: background 0.18s;
+}
+
+
 /* Editable List */
 .friend-list, .item-list {
     display: grid;
@@ -136,6 +230,21 @@ textarea {
     transition: 0.3s;
 }
 
+.split-btn {
+    background: rgba(0, 217, 255, 0.6);
+    color: white;
+    padding: 5px 10px;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: 0.3s;
+}
+
+.split-btn:hover {
+    background: rgb(0, 217, 255);
+}
+
 .delete-btn:hover {
     background: rgba(255, 0, 0, 1);
 }
@@ -145,6 +254,112 @@ select {
     color: white;       /* White text */
     border: 1px solid #555;
 }
+
+.modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: flex-start;  /* was center */
+    justify-content: center;
+    z-index: 2000;
+    overflow-y: auto;
+}
+
+.modal-content {
+    background: #2c2c2c;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%; max-width: 500px;
+    position: relative;
+    margin-top: 40px;   /* Add this line! */
+}
+.split-modal-searcharea {
+    width: 100%;
+    margin: 0 auto 0 auto;
+    position: relative;
+    text-align: left;
+}
+
+#friendSearch {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#searchResults {
+    width: 100%;
+    left: 0;
+    right: 0;
+    min-width: 0;
+    max-width: 100%;
+}
+
+#assignedFriendsList {
+    width: 100%;
+}
+
+.close-btn {
+    position: absolute; top: 10px; right: 15px;
+    cursor: pointer; font-size: 24px; color: white;
+}
+
+#friendSearch {
+    max-height: 150px; overflow-y: auto;
+    background: #333; padding: 5px; border-radius: 5px;
+}
+
+#searchResults {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 46px; /* adjust as needed based on padding/margin */
+    z-index: 2010;
+    background: #3a3a3a;
+    color: #fff;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    max-height: 250px;
+    overflow-y: auto;
+    min-width: 160px;
+}
+
+#searchResults .autocomplete-item {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+#searchResults .autocomplete-item:last-child {
+    border-bottom: none;
+}
+#searchResults .autocomplete-item:hover {
+    background: #525252;
+}
+
+
+#assignedFriendsList {
+    max-height: 400px; overflow-y: auto;
+    background: #333; padding: 5px; border-radius: 5px;
+}
+
+.friend-unit {
+    display: flex; justify-content: space-between;
+    align-items: center; 
+    padding: 8px 12px;
+    border-bottom: 1px solid #444;
+}
+
+.friend-unit input[type=number] {
+    width: 60px; padding: 5px;
+    background: #444; color: white; border-radius: 3px; border: none;
+}
+
+.save-btn {
+    margin-top: 10px; width: 100%; background: #4caf50;
+}
+.save-btn:hover {
+    margin-top: 10px; width: 100%; background: #29762c;
+}
+
 
 /* Autocomplete Suggestions */
 #itemSuggestions {
@@ -237,63 +452,14 @@ select {
     overflow: visible; /* Prevents clipping */
 }
 
-/* Dropdown inside item */
-.custom-multiselect {
-    position: relative;
-    display: inline-block;
-    background: #222;
-    color: white;
-    margin: 5px;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    min-width: 150px;
-    text-align: left;
-    z-index: 10;
-}
-
-/* Ensure dropdown is on top */
-.custom-multiselect .dropdown-options {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: #333;
-    color: white;
-    border: 1px solid #555;
-    width: 100%;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 1100; /* Ensure dropdown is above everything */
-    display: none;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-}
-
 /* Ensure selected item appears on top */
 .item[style*="z-index: 1000"] {
     z-index: 1000 !important;
 }
 
-.custom-multiselect .dropdown-options div {
-    padding: 8px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.custom-multiselect .dropdown-options div:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.custom-multiselect .dropdown-options div.selected {
-    background: rgba(171, 171, 171, 0.5);
-}
-
 /* Hide dropdowns by default */
 .hidden {
     display: none !important;
-}
-
-.custom-multiselect .selected-options {
-    display: block;
 }
 
 table {
@@ -422,9 +588,6 @@ a:active {
         max-width: 100%;
     }
 
-    .custom-multiselect {
-        max-width: 100%;
-    }
 
     .inline-friend-select {
         width: 90%;
