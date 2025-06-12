@@ -95,11 +95,12 @@
             </div>
             <h3 data-res="import-gpt-title"></h3>
             <button class="btn glass-btn" onclick="getGPTPromptOrder()" data-res="import-gpt-prompt-btn"></button>
+            <button class="btn glass-btn" onclick="window.open('https://chatgpt.com', '_blank')" data-res="import-gpt-goto-btn"></button>
             <button class="btn glass-btn" onclick="parseGPTOrder()" data-res="import-gpt-input-btn"></button>
-            <br>
+            <br><br>
             <span data-res="import-gpt-description"></span>
-            <h3 data-res="import-regular-title"></h3>
-            <i><span>Již není podporováno.</span></i>
+            <!-- <h3 data-res="import-regular-title"></h3>
+            <i><span>Již není podporováno.</span></i> -->
             <!-- <br>
             <h3 data-res="import-regular-title"></h3>
             <button class="btn glass-btn" onclick="parseFoodoraOrder()" data-res="import-foodora-btn"></button>
@@ -147,12 +148,12 @@
 <div id="splitModal" class="modal hidden">
     <div class="modal-content">
         <span class="close-btn" onclick="closeSplitModal()">&times;</span>
-        <h3>🔱 Rozdělit položku 🔱</h3>
+        <h3 data-res="split-item">🔱 Rozdělit položku 🔱</h3>
         <div class="split-modal-searcharea">
-            <input type="text" id="friendSearch" placeholder="Vyhledat a přidat prátelé..." autocomplete="off">
+            <input type="text" id="friendSearch" data-res="search-friends-to-add-placeholder" autocomplete="off">
             <div id="searchResults"></div>
             <div id="assignedFriendsList"></div>
-            <button class="btn save-btn" onclick="saveSplit()">Uložit</button>
+            <button class="btn save-btn" onclick="saveSplit()" data-res="save">Uložit</button>
         </div>
     </div>
 </div>

@@ -23,7 +23,7 @@
   "friend-name-placeholder": "Enter Friend's Name",
   "friend-add-btn": "➕ Add",
   "split-title": "Bill Splitting",
-  "split-among-all": "Split",
+  "split-among-all": "Split between all",
   "split-item-name-placeholder": "Item Name",
   "split-price-placeholder": "Price",
   "split-add-item-btn": "➕ Add Item",
@@ -39,6 +39,7 @@
   "import-foodora-marek-btn": "✅ Foodora (Marek)",
   "import-replay-btn": "✅ Replay's",
   "import-gpt-prompt-btn": "🤖 Get prompt",
+  "import-gpt-goto-btn": "🌐 Go to GPT",
   "import-gpt-input-btn": "✅ Parse",
   "bills-title": "Past Bills",
   "settings-title": "Settings",
@@ -54,5 +55,12 @@
   "saved-to-history": "Saved to history.",
   "missing-name-or-price": "Please fill in the item name and price.",
   "item-deleted": "Item deleted.",
-  "friend-deleted": "Friend deleted."
+  "friend-deleted": "Friend deleted.",
+  "delete": "Delete",
+  "split": "Split",
+  "no-longer-supported": "No longer supported",
+  "split-item": "🔱 Split Item 🔱",
+  "ratio": "Ratio",
+  "save": "Save",
+  "search-friends-to-add-placeholder": "Search friends to add..."
 }

@@ -39,6 +39,7 @@
   "import-foodora-marek-btn": "✅ Foodora (Marek)",
   "import-replay-btn": "✅ Replay's",
   "import-gpt-prompt-btn": "🤖 Získat prompt",
+  "import-gpt-goto-btn": "🌐 Přejít na GPT",
   "import-gpt-input-btn": "✅ Zpracovat",
   "bills-title": "Předchozí účtenky",
   "settings-title": "Nastavení",
@@ -48,11 +49,18 @@
   "settings-other-title": "Ostatní",
   "settings-update-save-btn": "Aktualizovat a uložit",
   "bill-duplicate-btn": "📑 Duplikovat",
-  "bill-delete-btn": "🗑️ Smazat",
+  "bill-delete-btn": "🗑️ Odstranit",
   "empty-text-area-error": "Textové pole je prázdné!",
   "copied-to-clipboard": "Zkopírováno do schránky.",
   "saved-to-history": "Uloženo do historie.",
   "missing-name-or-price": "Vyplňte název a cenu položky.",
   "item-deleted": "Položka smazána.",
-  "friend-deleted": "Přítel smazán."
+  "friend-deleted": "Přítel smazán.",
+  "delete": "Odstranit",
+  "split": "Rozdělit",
+  "no-longer-supported": "Již není podporováno",
+  "split-item": "🔱 Rozdělit položku 🔱",
+  "ratio": "Poměr",
+  "save": "Uložit",
+  "search-friends-to-add-placeholder": "Vyhledat a přidat prátelé..."
 }

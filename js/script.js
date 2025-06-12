@@ -31,7 +31,7 @@ i18next
     backend: {
       loadPath: './locales/{{lng}}.json', // Path to the translation files
     },
-    fallbackLng: 'en', // Fallback language when user language isn't available
+    fallbackLng: 'cs', // Fallback language when user language isn't available
     interpolation: {
       escapeValue: false, // No need to escape HTML
     },
@@ -80,7 +80,7 @@ function renderFriends() {
         list.innerHTML += `
             <div class="friend-item">
                 <input class="friend-input" type="text" value="${friend}" onchange="updateFriend(${index}, this.value)">
-                <button class="delete-btn" onclick="deleteFriend(${index})">🗑</button>
+                <button class="delete-btn" onclick="deleteFriend(${index})">🗑️</button>
             </div>
         `;
     });
@@ -145,7 +145,7 @@ function renderAssignedFriends() {
         assignedDiv.innerHTML += `
             <div class="friend-unit">
                 <span id="friend">${friend}</span>
-                <span id="ratio">Poměr:</span>
+                <span id="ratio">${i18next.t("ratio")}</span>
                 <input type="number" value="${units}" min="1" onchange="updateUnits('${friend}', this.value)">
                 <button class="delete-btn" onclick="removeFriend('${friend}')">🗑️</button>
             </div>
@@ -263,8 +263,8 @@ function renderItems() {
                 <input type="text" class="item-input" value="${item.name}" onchange="updateItem(${index}, 'name', this.value)">
                 <input type="number" class="item-input" value="${item.price}" onchange="updateItem(${index}, 'price', this.value)">
                 <span class="split-summary">${summary}</span>
-                <button class="split-btn tooltip" data-text="Split" onclick="openSplitModal(${index})">🔱</button>
-                <button class="delete-btn tooltip" data-text="Delete" onclick="deleteItem(${index})">🗑️</button>
+                <button class="split-btn tooltip" data-text="${i18next.t("split")}" onclick="openSplitModal(${index})">🔱</button>
+                <button class="delete-btn tooltip" data-text="${i18next.t("delete")}" onclick="deleteItem(${index})">🗑️</button>
             </div>
         `;
     });

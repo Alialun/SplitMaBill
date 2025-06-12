@@ -112,7 +112,7 @@ textarea {
 .tooltip:before {
   content: attr(data-text); /* here's the magic */
   position:absolute;
-  z-index: 2000;
+  z-index: 2500;
   
   /* vertically center */
   bottom:110%;
