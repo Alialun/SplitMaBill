@@ -48,7 +48,7 @@
   "settings-other-title": "Alternativní End-Point",
   "settings-update-save-btn": "Ulož & Zkompiluj",
   "bill-duplicate-btn": "📑 Replikuj Objekt",
-  "bill-delete-btn": "🗑 Dezintegruj Instanci",
+  "bill-delete-btn": "🗑️ Dezintegruj Instanci",
   "empty-text-area-error": "Input buffer je prázdný, provedení odmítnuto.",
   "copied-to-clipboard": "Obsah úspěšně commitnut do clipboardu.",
   "saved-to-history": "Transakce archivována.",

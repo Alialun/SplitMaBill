@@ -104,6 +104,38 @@ textarea {
     opacity: 0.85;
 }
 
+.tooltip {
+  position:relative; /* making the .tooltip span a container for the tooltip text */
+  border-bottom:1px dashed #000; /* little indicater to indicate it's hoverable */
+}
+
+.tooltip:before {
+  content: attr(data-text); /* here's the magic */
+  position:absolute;
+  z-index: 2000;
+  
+  /* vertically center */
+  bottom:110%;
+  
+  /* move to right */
+  left:50%;
+  transform:translateX(-50%);
+  
+  /* basic styles */
+  min-width:50px;
+  padding:10px;
+  border-radius:10px;
+  background:#252525;
+  color: #fff;
+  text-align:center;
+
+  display:none; /* hide by default */
+}
+
+.tooltip:hover:before {
+  display:block;
+}
+
 /* Modal header */
 .modal-content h3 {
     margin-top: 0;

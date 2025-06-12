@@ -263,8 +263,8 @@ function renderItems() {
                 <input type="text" class="item-input" value="${item.name}" onchange="updateItem(${index}, 'name', this.value)">
                 <input type="number" class="item-input" value="${item.price}" onchange="updateItem(${index}, 'price', this.value)">
                 <span class="split-summary">${summary}</span>
-                <button class="split-btn" onclick="openSplitModal(${index})">➗</button>
-                <button class="delete-btn" onclick="deleteItem(${index})">🗑️</button>
+                <button class="split-btn tooltip" data-text="Split" onclick="openSplitModal(${index})">🔱</button>
+                <button class="delete-btn tooltip" data-text="Delete" onclick="deleteItem(${index})">🗑️</button>
             </div>
         `;
     });
